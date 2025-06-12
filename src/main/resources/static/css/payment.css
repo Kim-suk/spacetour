@@ -1,0 +1,48 @@
+* { box-sizing: border-box; }
+    html, body {
+      margin: 0; padding: 0; height: 100%;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #1e1e2f, #2d2d44);
+      color: #fff;
+    }
+    .container {
+      display: flex; justify-content: center; align-items: center;
+      flex-direction: column;
+      height: 100%; padding: 40px;
+    }
+    .payment-box {
+      width: 100%; max-width: 500px; background-color: #2a2a3d;
+      padding: 40px; border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+      transition: all 0.3s ease;
+      margin-bottom: 40px;
+    }
+    .payment-box:hover {
+      box-shadow: 0 15px 30px rgba(0,0,0,0.6);
+    }
+    p { text-align: center; margin-bottom: 30px; font-size: 28px; color: #f8f8f8; }
+    .form-row { margin-bottom: 25px; }
+    label { display: block; margin-bottom: 8px; font-weight: 500; color: #ccc; }
+    #card-element {
+      padding: 12px; border-radius: 8px;
+      background-color: #3b3b51; color: #fff;
+      border: 1px solid #555;
+    }
+    button {
+      width: 100%; padding: 14px; font-size: 18px;
+      background-color: #6772e5; border: none;
+      border-radius: 8px; color: #fff; cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      margin-top: 10px;
+    }
+    button:hover { background-color: #5469d4; transform: translateY(-2px); }
+    button:disabled { background-color: #999; cursor: not-allowed; }
+    #payment-message {
+      text-align: center; margin-top: 20px; font-size: 16px;
+    }
+    .coupon-row {
+      margin-bottom: 20px; text-align: center;
+    }
+    #payment-method, #agreement {
+      margin-bottom: 20px;
+    }

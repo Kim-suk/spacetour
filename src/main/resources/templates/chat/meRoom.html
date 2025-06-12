@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- ✅ 이 줄 추가 -->
+	<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.6.1/dist/sockjs.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+
+  <title>나와의 채팅</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f7f7f7;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    .chat-header {
+      background-color: #fee500;
+      padding: 15px;
+      text-align: center;
+      font-weight: bold;
+      font-size: 18px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .chat-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 15px;
+    }
+
+    .message {
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: flex-end;
+      position: relative;
+    }
+
+    .message .bubble {
+      background-color: #dcf8c6;
+      padding: 10px 14px;
+      border-radius: 18px;
+      max-width: 70%;
+      word-break: break-word;
+      cursor: pointer;
+    }
+
+    .chat-footer {
+      display: flex;
+      border-top: 1px solid #ccc;
+      padding: 10px;
+      background-color: white;
+    }
+
+    .chat-footer input {
+      flex: 1;
+      padding: 10px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 20px;
+      margin-right: 10px;
+    }
+
+    .chat-footer button {
+      background-color: #fee500;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+	<div class="chat-header" id="loginInfo" th:data-login-id="${loginId}" th:text="${loginId} + ' 채팅방'">채팅방</div>
+
+
+  <div class="chat-body" id="meChatLog"></div>
+
+  <div class="chat-footer">
+    <input type="text" id="meMessageInput" placeholder="메시지를 입력하세요">
+    <button onclick="sendToMyself()">전송</button>
+  </div>
+
+  <script>
+
+    const loginId = document.getElementById('loginInfo').getAttribute('data-login-id');
+
+    function connectWebSocket() {
+      const sock = new SockJS('/ws-chat');
+      const stompClient = Stomp.over(sock);
+
+      stompClient.connect({}, () => {
+        console.log("✅ STOMP 연결 성공");
+        stompClient.subscribe('/topic/chat/meRoom/' + loginId, message => {
+          const msg = JSON.parse(message.body);
+          addMessage(msg);
+        });
+      });
+    }
+
+    function loadMessages() {
+      const chatBox = document.getElementById('meChatLog');
+      if (!chatBox) return;
+
+	  fetch(`/chat/meRoom/messages?sender=${encodeURIComponent(loginId)}`)
+	    .then(res => {
+	      if (!res.ok) throw new Error('네트워크 응답 오류: ' + res.status);
+	      return res.json();
+	    })
+	    .then(messages => {
+	      chatBox.innerHTML = '';
+	      messages.forEach(addMessage);
+	      chatBox.scrollTop = chatBox.scrollHeight;
+	    })
+	    .catch(err => {
+	      console.error('채팅 기록 불러오기 에러:', err);
+	      alert('채팅 기록을 불러오는데 실패했습니다.');
+	    });
+		}
+
+	function addMessage(msg) {
+	  const chatBox = document.getElementById('meChatLog');
+	  
+	  if (msg.deleted) {
+	    const target = chatBox.querySelector(`[data-id="${msg.id}"]`);
+	    if (target) {
+	      target.querySelector('.bubble').textContent = '(삭제된 메시지입니다)';
+	      target.classList.add('deleted');
+	    }
+	    return;
+	  }
+
+	  // 메시지 DOM 생성
+	  const messageElem = document.createElement('div');
+	  messageElem.classList.add('message');
+	  messageElem.setAttribute('data-id', msg.id || '');
+
+	  const bubble = document.createElement('div');
+	  bubble.classList.add('bubble');
+	  bubble.textContent = msg.content;
+
+	  const timeSpan = document.createElement('span');
+	  timeSpan.style.fontSize = '0.7em';
+	  timeSpan.style.color = '#999';
+	  timeSpan.style.marginLeft = '8px';
+	  timeSpan.textContent = formatDate(msg.createdAt);
+
+	  messageElem.appendChild(bubble);
+	  messageElem.appendChild(timeSpan);
+
+	  chatBox.appendChild(messageElem);
+	  chatBox.scrollTop = chatBox.scrollHeight;
+	}
+
+	function formatDate(dateString) {
+	  const date = new Date(dateString);
+	  return `${date.getFullYear()}-${(date.getMonth()+1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+	}
+
+	document.addEventListener('DOMContentLoaded', function () {
+	  loadMessages();
+	  connectWebSocket();
+	});
+
+	function sendToMyself() {
+	  const input = document.getElementById('meMessageInput');
+	  const message = input.value.trim();
+	  if (message === '') return;
+
+	  const msg = {
+	    sender: loginId,
+	    content: message
+	  };
+
+	  fetch('/chat/meRoom', {
+	    method: 'POST',
+	    headers: {
+	      'Content-Type': 'application/json'
+	    },
+	    body: JSON.stringify(msg)
+	  }).then(res => {
+	    if (res.ok) {
+	      console.log("저장 완료");
+	    } else {
+	      alert("전송 실패");
+	    }
+	  });
+
+	  input.value = '';
+	}
+
+  </script>
+</body>
+</html>

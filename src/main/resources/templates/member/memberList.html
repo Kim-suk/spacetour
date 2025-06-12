@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>회원 정보 출력창</title>
+<style>
+   body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f6f9;
+      margin: 0;
+      padding: 0;
+      animation: fadeIn 1s ease-in;
+   }
+
+   @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+   }
+
+   .header {
+      background-color: #2c3e50;
+      color: white;
+      padding: 30px 0;
+      text-align: center;
+      font-size: 36px;
+      font-weight: bold;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+   }
+
+   .nav {
+      text-align: center;
+      margin: 20px 0;
+   }
+
+   .nav a {
+      text-decoration: none;
+      color: white;
+      background-color: #34495e;
+      padding: 12px 24px;
+      margin: 0 10px;
+      border-radius: 6px;
+      font-size: 16px;
+      transition: background-color 0.3s ease;
+   }
+
+   .nav a:hover {
+      background-color: #2c3e50;
+   }
+
+   table {
+      width: 90%;
+      margin: 0 auto 40px auto;
+      border-collapse: collapse;
+      background-color: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+      animation: fadeIn 1s ease-in;
+   }
+
+   th, td {
+      padding: 14px 16px;
+      border-bottom: 1px solid #ddd;
+      text-align: center;
+      font-size: 16px;
+   }
+
+   th {
+      background-color: #ecf0f1;
+      color: #2c3e50;
+      font-weight: bold;
+   }
+
+   tr:hover {
+      background-color: #f0f8ff;
+      transition: background-color 0.3s ease;
+   }
+
+   .no-member {
+      text-align: center;
+      font-weight: bold;
+      color: #7f8c8d;
+      padding: 20px;
+   }
+
+   .delete-btn {
+      color: white;
+      background-color: #e74c3c;
+      padding: 8px 16px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 14px;
+      transition: background-color 0.3s ease;
+   }
+
+   .delete-btn:hover {
+      background-color: #c0392b;
+   }
+</style>
+</head>
+<body>
+
+   <div class="header">회원 정보</div>
+
+   <div class="nav">
+      <a th:href="@{/board/boardList}">게시판</a>
+      <a th:href="@{/main/main}">홈</a>
+   </div>
+
+   <table>
+      <thead>
+         <tr>
+            <th>아이디</th>
+            <th>암호</th>
+            <th>이름</th>
+            <th>이메일</th>
+            <th>가입일자</th>
+            <th>삭제</th>
+         </tr>
+      </thead>
+
+      <tbody>
+         <!-- 회원이 없을 경우 -->
+         <tr th:if="${memberList == null or #lists.isEmpty(memberList)}">
+            <td colspan="6" class="no-member">
+               등록된 회원이 없습니다.
+            </td>
+         </tr>
+
+         <!-- 회원 목록 반복 출력 -->
+         <tr th:each="member : ${memberList}">
+            <td>
+               <a th:href="@{/member/detailMember(id=${member.id})}" th:text="${member.id}"></a>
+            </td>
+            <td th:text="${member.pwd}"></td>
+            <td th:text="${member.name}"></td>
+            <td th:text="${member.email}"></td>
+            <td th:text="${member.joinDate}"></td>
+            <td>
+               <a th:href="@{/member/deleteMember(id=${member.id})}" class="delete-btn">삭제</a>
+            </td>
+         </tr>
+      </tbody>
+   </table>
+
+</body>
+</html>

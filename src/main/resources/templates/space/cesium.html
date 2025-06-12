@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>CesiumJS ISS 위치 및 궤도 시각화</title>
+  <script src="https://cesium.com/downloads/cesiumjs/releases/1.117/Build/Cesium/Cesium.js"></script>
+  <link href="https://cesium.com/downloads/cesiumjs/releases/1.117/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+  <style>
+    html, body, #cesiumContainer {
+      width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+  <div id="cesiumContainer"></div>
+
+  <script>
+    // ✅ Access Token 설정 (당신이 제공한 토큰)
+    Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJkNmRjYWNlMy01OGZkLTQzYjktYjc3Ny03YTI2ZGM2NzEzZGEiLCJpZCI6MzExMjg1LCJpYXQiOjE3NDk2NDExNTZ9.Xb0Vbod1cYTfVvQj2nscfwSiyGxkutv3f3L2h60LQQE';
+
+    const viewer = new Cesium.Viewer('cesiumContainer', {
+      shouldAnimate: true
+    });
+
+    // TLE 기반 궤도 시각화 (예: ISS)
+    const issTLE = [
+      "1 25544U 98067A   24160.41309121  .00017814  00000+0  32433-3 0  9997",
+      "2 25544  51.6431 138.0264 0004562 180.7473 283.4694 15.50677211434341"
+    ];
+
+    // Satellite.js를 이용한 궤도 계산
+    const satrec = satellite.twoline2satrec(issTLE[0], issTLE[1]);
+
+    function propagateISS() {
+      const positions = [];
+      const now = new Date();
+      for (let i = 0; i <= 90; i++) {
+        const time = new Date(now.getTime() + i * 60 * 1000); // 90분 궤적
+        const gmst = satellite.gstime(time);
+        const pos = satellite.propagate(satrec, time);
+        const positionEci = pos.position;
+
+        if (positionEci) {
+          const positionGd = satellite.eciToGeodetic(positionEci, gmst);
+          const lat = Cesium.Math.toDegrees(positionGd.latitude);
+          const lon = Cesium.Math.toDegrees(positionGd.longitude);
+          const alt = positionGd.height * 1000;
+
+          const carto = Cesium.Cartesian3.fromDegrees(lon, lat, alt);
+          positions.push(carto);
+        }
+      }
+
+      viewer.entities.add({
+        name: "ISS Orbit",
+        polyline: {
+          positions: positions,
+          width: 2,
+          material: Cesium.Color.YELLOW
+        }
+      });
+    }
+
+    // 위성 실시간 위치 갱신
+    function updateISSPosition() {
+      const now = new Date();
+      const gmst = satellite.gstime(now);
+      const pos = satellite.propagate(satrec, now);
+      const positionEci = pos.position;
+
+      if (positionEci) {
+        const positionGd = satellite.eciToGeodetic(positionEci, gmst);
+        const lat = Cesium.Math.toDegrees(positionGd.latitude);
+        const lon = Cesium.Math.toDegrees(positionGd.longitude);
+        const alt = positionGd.height * 1000;
+
+        const issPosition = Cesium.Cartesian3.fromDegrees(lon, lat, alt);
+
+        // 기존 마커 제거
+        if (viewer.entities.getById("iss")) {
+          viewer.entities.removeById("iss");
+        }
+
+        // 새로운 위치 추가
+        viewer.entities.add({
+          id: "iss",
+          name: "ISS",
+          position: issPosition,
+          point: {
+            pixelSize: 10,
+            color: Cesium.Color.WHITE
+          },
+          label: {
+            text: '🛰️ ISS',
+            font: '14pt sans-serif',
+            style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+            outlineWidth: 2,
+            verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+            pixelOffset: new Cesium.Cartesian2(0, -15)
+          }
+        });
+
+        viewer.camera.flyTo({
+          destination: issPosition,
+          duration: 1.5
+        });
+      }
+    }
+
+    // Satellite.js 불러오기
+    const script = document.createElement("script");
+    script.src = "https://unpkg.com/satellite.js@5.0.0/dist/satellite.min.js";
+    script.onload = function () {
+      propagateISS();
+      updateISSPosition();
+      setInterval(updateISSPosition, 10000); // 10초마다 위치 업데이트
+    };
+    document.head.appendChild(script);
+
+  </script>
+</body>
+</html>

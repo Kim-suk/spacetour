@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>게시글 상세</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, #f0f0f0, #dcdcdc);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: white;
+            width: 90%;
+            max-width: 800px;
+            margin: 100px auto;
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        .detail-row {
+            display: flex;
+            margin-bottom: 20px;
+        }
+
+        .detail-label {
+            width: 120px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .detail-content {
+            flex: 1;
+            color: #222;
+        }
+
+        .detail-content input[type="text"],
+        .detail-content textarea {
+            width: 100%;
+            padding: 8px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .detail-content textarea {
+            resize: vertical;
+            height: 150px;
+        }
+
+        .images {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .images img {
+            width: 100px;
+            border-radius: 6px;
+            transition: transform 0.3s;
+        }
+
+        .images img:hover {
+            transform: scale(1.5);
+        }
+
+        .buttons {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .buttons a,
+        .buttons input[type="submit"] {
+            display: inline-block;
+            background-color: #000;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            border: none;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .buttons a:hover,
+        .buttons input[type="submit"]:hover {
+            background-color: #000;
+        }
+
+        .readonly input {
+            background-color: #f5f5f5;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>게시글 상세보기</h1>
+    <form method="post">
+        <div class="detail-row">
+            <div class="detail-label">제목</div>
+            <div class="detail-content">
+                <input type="text" name="title" th:value="${board.title}">
+            </div>
+        </div>
+        <div class="detail-row readonly">
+            <div class="detail-label">작성자</div>
+            <div class="detail-content">
+                <input type="text" name="id" th:value="${board.id}" readonly>
+            </div>
+        </div>
+        <div class="detail-row">
+            <div class="detail-label">내용</div>
+            <div class="detail-content">
+                <textarea name="content" th:text="${board.content}"></textarea>
+            </div>
+        </div>
+        <div class="detail-row">
+            <div class="detail-label">작성일</div>
+            <div class="detail-content" th:text="${board.writeDate}"></div>
+        </div>
+        <div class="detail-row">
+            <div class="detail-label">첨부파일</div>
+			<td>
+				<input type="file" name="files" multiple>
+			</td>
+            <div class="detail-content">
+                <div th:if="${fileList != null and !#lists.isEmpty(fileList)}" class="images" th:each="file : ${fileList}">
+                    <a th:href="@{'/files/' + ${board.articleNo} + '/' + ${file.fileName}}">
+                        <img th:src="@{'/files/' + ${board.articleNo} + '/' + ${file.fileName}}" alt="첨부 이미지">
+                    </a>
+					
+                </div>
+                <div th:if="${fileList == null or #lists.isEmpty(fileList)}">
+                    <span>파일 없음</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="buttons">
+            <input type="submit" value="게시글 수정">
+            <a href="/board/insertBoard">글등록</a>
+            <a th:href="@{/board/deleteBoard(articleNo=${board.articleNo})}">글삭제</a>
+            <a href="/board/boardList">글목록</a>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>

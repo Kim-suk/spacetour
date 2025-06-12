@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>3D 지구본 날씨 정보</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: #fff;
+    }
+    #globeViz {
+      width: 100vw;
+      height: 100vh;
+    }
+    #weatherInfo {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 10px;
+      box-shadow: 0 0 10px #000;
+      z-index: 999;
+    }
+    #searchBox {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: #0008;
+      padding: 10px;
+      border-radius: 8px;
+      z-index: 1000;
+    }
+    #suggestList {
+      position: absolute;
+      top: 60px;
+      right: 20px;
+      background: #222;
+      list-style: none;
+      padding: 10px;
+      margin: 0;
+      border-radius: 8px;
+      z-index: 1001;
+      color: #fff;
+    }
+    #suggestList li {
+      padding: 5px;
+      cursor: pointer;
+    }
+    #suggestList li:hover {
+      background: #333;
+    }
+  </style>
+</head>
+<body>
+
+<div id="globeViz"></div>
+<div id="weatherInfo">
+  🌍 클릭하거나 도시명을 검색해 날씨 정보를 확인하세요!
+  <div id="exchangeInfo" style="margin-top: 10px;"></div>
+</div>
+
+
+<div id="searchBox">
+  <input id="citySearch" type="text" placeholder="도시명을 입력하세요" />
+  <button onclick="searchCity()">검색</button>
+   <button onclick="clearMarkers()">Clear</button>
+</div>
+<ul id="suggestList"></ul>
+
+<script src="https://unpkg.com/three@0.150.1/build/three.min.js"></script>
+<script src="https://unpkg.com/globe.gl"></script>
+
+<script>
+ // 마커 초기화 함수 추가
+function clearMarkers() {
+  markerData.length = 0;
+  globe.objectsData([]); // Globe에서 마커 제거
+  document.getElementById("weatherInfo").innerHTML = "🌍 클릭하거나 도시명을 검색해 날씨 정보를 확인하세요!";
+}
+  const globe = Globe()
+    (document.getElementById('globeViz'))
+    .globeImageUrl('//unpkg.com/three-globe/example/img/earth-night.jpg')
+    .bumpImageUrl('//unpkg.com/three-globe/example/img/earth-topology.png')
+    .showAtmosphere(true)
+    .atmosphereColor('#3a228a')
+    .atmosphereAltitude(0.25)
+    .backgroundColor('#000')
+    .onGlobeClick(async ({ lat, lng }) => {
+  fetchWeather(lat, lng);
+
+  const countryCode = await fetchCountryCode(lat, lng);
+  addMarker(lat, lng, countryCode);
+});
+
+
+  // 자동 및 수동 회전 설정
+  globe.controls().autoRotate = true;
+  globe.controls().autoRotateSpeed = 0.5;
+  globe.controls().enableRotate = true;   // 마우스로 회전 가능
+  globe.controls().enableZoom = true;     // 확대/축소 허용
+  globe.controls().enablePan = false;     // 화면 이동 제한
+  
+function fetchCountryCode(lat, lon) {
+  const username = 'sukyung'; // GeoNames 사용자 ID
+  const url = `https://secure.geonames.org/countryCodeJSON?lat=${lat}&lng=${lon}&username=${username}`;
+
+  return fetch(url)
+    .then(res => res.json())
+    .then(data => data.countryCode)
+    .catch(err => {
+      console.error("국가 코드 가져오기 실패:", err);
+      return 'KR'; // 실패 시 기본값
+    });
+}
+
+const markerData = [];
+
+function createFlagSprite(countryCode) {
+  const flagUrl = `https://flagcdn.com/w80/${countryCode.toLowerCase()}.png`;
+  const textureLoader = new THREE.TextureLoader();
+  const spriteMaterial = new THREE.SpriteMaterial({
+    map: textureLoader.load(flagUrl),
+    depthTest: false
+  });
+  const sprite = new THREE.Sprite(spriteMaterial);
+  sprite.scale.set(11, 9, 8); // 국기 크기 조정
+  return sprite;
+}
+
+function addMarker(lat, lon, countryCode) {
+  // 중복된 나라 코드는 이미 등록된 마커 데이터에 있는지 확인
+  const isExist = markerData.some(marker => marker.countryCode === countryCode);
+  if (isExist) {
+    // 같은 나라 국기가 이미 있으면 마커 추가하지 않음
+    return;
+  }
+
+  const sprite = createFlagSprite(countryCode);
+
+  markerData.push({
+    lat: +lat,
+    lng: +lon,
+    obj: sprite,
+    countryCode: countryCode // 중복 체크용으로 countryCode 저장
+  });
+
+  globe
+    .objectsData(markerData)
+    .objectLat('lat')
+    .objectLng('lng')
+    .objectAltitude(0.02)
+    .objectThreeObject('obj');
+}
+
+
+function fetchWeather(lat, lon, cityLabel = null) {
+  const apiKey = '3d9d58c3101549fd3a37eed43698b7ee';
+  const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric&lang=kr`;
+
+  fetch(url)
+    .then(res => res.json())
+    .then(data => {
+      if (data.cod !== 200) {
+        console.error('날씨 정보를 가져오는 데 실패했습니다.');
+        return;
+      }
+
+      const locationName = cityLabel || data.name;
+      const countryName = data.sys.country;
+      const weather = data.weather[0].description;
+      const temp = data.main.temp;
+      const humidity = data.main.humidity;
+      const wind = data.wind.speed;
+      const icon = data.weather[0].icon;
+
+      document.getElementById("weatherInfo").innerHTML = `
+        <h3>📍 ${locationName}, ${countryName}</h3>
+        <img src="https://openweathermap.org/img/wn/${icon}@2x.png" alt="날씨 아이콘">
+        <p>🌤 날씨: ${weather}</p>
+        <p>🌡 온도: ${temp}℃</p>
+        <p>💧 습도: ${humidity}%</p>
+        <p>💨 풍속: ${wind} m/s</p>
+      `;
+
+      fetchExchangeRate(countryName);
+    })
+    .catch(err => console.error('날씨 정보 가져오기 실패:', err));
+}
+
+
+// 수정된 searchCity 함수
+function searchCity() {
+  const city = document.getElementById("citySearch").value.trim();
+  if (!city) {
+    alert("도시명을 입력하세요.");
+    return;
+  }
+
+  fetch(`https://secure.geonames.org/searchJSON?q=${encodeURIComponent(city)}&maxRows=1&username=sukyung`)
+    .then(res => res.json())
+    .then(async data => {
+      if (data.totalResultsCount === 0) {
+        alert("도시를 찾을 수 없습니다.");
+        return;
+      }
+
+      const loc = data.geonames[0];
+      const lat = loc.lat;
+      const lon = loc.lng;
+      const cityLabel = loc.name;
+
+      // 국가 코드 가져오기
+      const countryCode = await fetchCountryCode(lat, lon);
+
+      globe.pointOfView({ lat: +lat, lng: +lon, altitude: 1.5 }, 2000);
+      fetchWeather(lat, lon, cityLabel, countryCode);
+      addMarker(lat, lon, countryCode);
+    })
+    .catch(err => {
+      console.error("GeoNames API 오류:", err);
+      alert("도시 정보를 가져오는 중 오류가 발생했습니다.");
+    });
+}
+
+
+ document.getElementById("citySearch").addEventListener("input", function () {
+  const input = this.value.trim();
+  if (input.length < 2) return;
+
+  fetch(`https://secure.geonames.org/searchJSON?q=${encodeURIComponent(input)}&maxRows=5&username=sukyung`)
+    .then(res => res.json())
+    .then(data => {
+      const list = document.getElementById("suggestList");
+      list.innerHTML = "";
+      if (!data.geonames || data.geonames.length === 0) return;
+
+      data.geonames.forEach(city => {
+        const li = document.createElement("li");
+        li.textContent = `${city.name}, ${city.countryName || city.countryCode}`;
+        li.onclick = () => {
+          document.getElementById("citySearch").value = `${city.name}, ${city.countryName || city.countryCode}`;
+          list.innerHTML = "";
+          globe.pointOfView({ lat: +city.lat, lng: +city.lng, altitude: 1.5 }, 2000);
+          fetchWeather(city.lat, city.lng, city.name);
+          addMarker(city.lat, city.lng, city.countryCode);
+        };
+        list.appendChild(li);
+      });
+    })
+    .catch(err => {
+      console.error("자동완성 API 오류:", err);
+    });
+});
+
+
+  // 현재 위치 기반 초기 날씨
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(pos => {
+      const { latitude, longitude } = pos.coords;
+      globe.pointOfView({ lat: latitude, lng: longitude, altitude: 1.5 }, 2000);
+      fetchWeather(latitude, longitude);
+    }, err => {
+      console.warn("위치 정보를 사용할 수 없습니다:", err.message);
+    });
+  } else {
+    alert("이 브라우저에서는 위치 정보를 지원하지 않습니다.");
+  }
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,37 @@
+{"properties": [
+  {
+    "name": "stripe.secret.key",
+    "type": "java.lang.String",
+    "description": "A description for 'stripe.secret.key'"
+  },
+  {
+    "name": "app.domain",
+    "type": "java.lang.String",
+    "description": "A description for 'app.domain'"
+  },
+  {
+    "name": "payment.toss.secret-key",
+    "type": "java.lang.String",
+    "description": "A description for 'payment.toss.secret-key'"
+  },
+  {
+    "name": "payment.toss.client-key",
+    "type": "java.lang.String",
+    "description": "A description for 'payment.toss.client-key'"
+  },
+  {
+    "name": "toss.api-key",
+    "type": "java.lang.String",
+    "description": "A description for 'toss.api-key'"
+  },
+  {
+    "name": "spring.servlet.redis.host",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.servlet.redis.host'"
+  },
+  {
+    "name": "spring.servlet.redis.port",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.servlet.redis.port'"
+  }
+]}

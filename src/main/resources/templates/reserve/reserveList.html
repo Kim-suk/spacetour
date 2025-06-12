@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">	
+<head>
+    <title>예약 내역</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #ccc;
+            text-align: center;
+        }
+
+        .status-confirmed {
+            color: green;
+            font-weight: bold;
+        }
+
+        .status-cancelled {
+            color: red;
+            font-weight: bold;
+        }
+
+        .status-pending {
+            color: orange;
+            font-weight: bold;
+        }
+
+        .btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .btn-cancel {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .btn-detail {
+            background-color: #2196F3;
+            color: white;
+        }
+
+        .btn-approve {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        /* 모달 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 999;
+            left: 0; top: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 20px;
+            width: 40%;
+            border-radius: 8px;
+        }
+
+        .modal-close {
+            float: right;
+            cursor: pointer;
+            font-size: 18px;
+        }
+    </style>
+    <script>
+        function showDetail(id, date, time, planet, seats, price, status) {
+            document.getElementById("detail-date").innerText = date;
+            document.getElementById("detail-time").innerText = time;
+            document.getElementById("detail-planet").innerText = planet;
+            document.getElementById("detail-seats").innerText = seats;
+            document.getElementById("detail-price").innerText = price;
+            document.getElementById("detail-status").innerText = status;
+            document.getElementById("modal").style.display = "block";
+        }
+
+        function closeModal() {
+            document.getElementById("modal").style.display = "none";
+        }
+    </script>
+</head>
+<body>
+
+<h2>나의 예약 내역</h2>
+
+<table>
+    <thead>
+    <tr>
+        <th>날짜</th>
+        <th>시간</th>
+        <th>플래닛</th>
+        <th>좌석</th>
+        <th>인원</th>
+        <th>가격</th>
+        <th>상태</th>
+        <th>기능</th>
+    </tr>
+    </thead>
+    <tbody>
+    <c:forEach var="res" items="${reservations}">
+        <tr>
+            <td>${res.reserveDate}</td>
+            <td>${res.reserveHour}:${res.reserveMinute}</td>
+            <td>${res.planet}</td>
+            <td>${res.selectedSeats}</td>
+            <td>${res.personCount}</td>
+            <td>${res.price}</td>
+            <td class="status-${res.status.toLowerCase()}">${res.status}</td>
+            <td>
+                <button class="btn btn-detail"
+                        onclick="showDetail('${res.id}', '${res.reserveDate}', '${res.reserveHour}:${res.reserveMinute}', '${res.planet}', '${res.selectedSeats}', '${res.price}', '${res.status}')">
+                    상세보기
+                </button>
+
+                <c:if test="${res.status == 'CONFIRMED'}">
+                    <form action="/reserve/cancel" method="post" style="display:inline;">
+                        <input type="hidden" name="id" value="${res.id}" />
+                        <input type="submit" class="btn btn-cancel" value="취소"
+                               onclick="return confirm('정말 예약을 취소하시겠습니까?');"/>
+                    </form>
+                </c:if>
+
+                <c:if test="${res.status == 'PENDING'}">
+                    <form action="/reserve/approve" method="post" style="display:inline;">
+                        <input type="hidden" name="id" value="${res.id}" />
+                        <input type="submit" class="btn btn-approve" value="승인"
+                               onclick="return confirm('이 예약을 승인하시겠습니까?');"/>
+                    </form>
+                </c:if>
+            </td>
+        </tr>
+    </c:forEach>
+    </tbody>
+</table>
+
+<!-- 상세보기 모달 -->
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <span class="modal-close" onclick="closeModal()">✖</span>
+        <h3>예약 상세 정보</h3>
+        <p><strong>날짜:</strong> <span id="detail-date"></span></p>
+        <p><strong>시간:</strong> <span id="detail-time"></span></p>
+        <p><strong>플래닛:</strong> <span id="detail-planet"></span></p>
+        <p><strong>좌석:</strong> <span id="detail-seats"></span></p>
+        <p><strong>가격:</strong> <span id="detail-price"></span>원</p>
+        <p><strong>상태:</strong> <span id="detail-status"></span></p>
+        <button onclick="closeModal()" class="btn">닫기</button>
+    </div>
+</div>
+
+</body>
+</html>

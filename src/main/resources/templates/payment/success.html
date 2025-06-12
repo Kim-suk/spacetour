@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>결제 완료</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f4f6f9;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 60px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #2d8cf0;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        p {
+            font-size: 18px;
+            margin: 12px 0;
+        }
+        span.value {
+            color: #333;
+            font-weight: bold;
+        }
+        .button-wrap {
+            text-align: center;
+            margin-top: 30px;
+        }
+        .button-wrap a {
+            display: inline-block;
+            padding: 12px 24px;
+            background: #2d8cf0;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: background 0.3s;
+        }
+        .button-wrap a:hover {
+            background: #1b6dc1;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>✅ 결제가 완료되었습니다</h1>
+
+    <p><strong>주문번호:</strong> <span class="value" th:text="${orderId}"></span></p>
+    <p><strong>결제금액:</strong> <span class="value" th:text="${amount}"></span>원</p>
+    <p><strong>상품명:</strong> <span class="value" th:text="${planet}"></span></p>
+  <p><strong>구매자명:</strong> <span class="value" th:text="${loginId} ?: '비회원'"></span></p>
+ 
+
+  <div class="button-wrap">
+      <a th:href="@{/main/main}">홈으로 돌아가기</a>
+      <a th:href="@{/payment/history(loginId=${loginId})}" style="margin-left: 15px; background: #28a745;">결제 내역 확인하기</a>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,305 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
+
+  /* Reset & 기본 */
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0b0f29 0%, #12192e 100%);
+    color: #0ff;
+    font-family: 'Orbitron', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    overflow-x: hidden;
+  }
+
+  h1 {
+    font-size: 3rem;
+    margin-bottom: 30px;
+    letter-spacing: 0.15em;
+    text-shadow: 0 0 8px #0ff, 0 0 20px #0ff;
+    user-select: none;
+  }
+
+  /* 전체 컨테이너 */
+  .container {
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+    width: 100%;
+    max-width: 1200px;
+    padding: 0 15px;
+    flex-wrap: wrap;
+  }
+
+  /* 시계 영역 */
+  .clock {
+    background: rgba(0, 20, 60, 0.9);
+    padding: 30px 40px;
+    border: 2px solid #0ff;
+    border-radius: 16px;
+    box-shadow: 0 0 30px #0ff;
+    flex: 1 1 450px;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    user-select: none;
+  }
+
+  .clock canvas {
+    width: 500px !important;
+    height: 500px !important;
+    display: block;
+    margin-bottom: 20px;
+    filter: drop-shadow(0 0 10px #0ff);
+    border-radius: 50%;
+    background: radial-gradient(circle at center, #041627 60%, #000815 100%);
+    box-shadow:
+      inset 0 0 30px #0ff,
+      0 0 20px #0ff;
+  }
+
+  .time-controls {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .time-controls label {
+    font-size: 1.4rem;
+    color: #0ff;
+    text-shadow: 0 0 5px #0ff;
+    user-select: none;
+  }
+
+  .time-controls input[type="number"] {
+    width: 60px;
+    padding: 8px 12px;
+    margin: 0 6px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.3rem;
+    text-align: center;
+    color: #000;
+    font-weight: bold;
+    box-shadow: 0 0 10px #0ff inset;
+    transition: box-shadow 0.3s ease;
+  }
+  .time-controls input[type="number"]:focus {
+    outline: none;
+    box-shadow: 0 0 18px #0ff;
+    background-color: #ccffff;
+  }
+
+  .time-controls select {
+    padding: 8px 16px;
+    border-radius: 12px;
+    border: none;
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #000;
+    box-shadow: 0 0 10px #0ff inset;
+    cursor: pointer;
+    transition: box-shadow 0.3s ease;
+  }
+  .time-controls select:hover, .time-controls select:focus {
+    box-shadow: 0 0 20px #0ff;
+    outline: none;
+  }
+
+  button {
+    background-color: #0ff;
+    color: #000;
+    border: none;
+    padding: 12px 28px;
+    font-size: 1.4rem;
+    border-radius: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 0 18px #0ff;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    user-select: none;
+  }
+  button:hover {
+    background-color: #00ccff;
+    box-shadow: 0 0 30px #00ccff;
+  }
+
+  /* 달력 영역 */
+  .calendar {
+    background: rgba(0, 20, 60, 0.9);
+    padding: 30px 40px;
+    border: 2px solid #0ff;
+    border-radius: 16px;
+    box-shadow: 0 0 30px #0ff;
+    flex: 1 1 350px;
+    max-width: 500px;
+    user-select: none;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  .calendar-header button {
+    background: transparent;
+    border: 2px solid #0ff;
+    color: #0ff;
+    font-size: 1.8rem;
+    padding: 6px 16px;
+    border-radius: 12px;
+    transition: background-color 0.3s ease;
+  }
+  .calendar-header button:hover {
+    background-color: #0ff;
+    color: #000;
+    box-shadow: 0 0 20px #0ff;
+  }
+  .calendar-header select {
+    font-size: 1.2rem;
+    padding: 8px 12px;
+    border-radius: 12px;
+    border: none;
+    font-weight: bold;
+    color: #000;
+    box-shadow: 0 0 15px #0ff inset;
+    cursor: pointer;
+    margin: 0 5px;
+    min-width: 100px;
+    transition: box-shadow 0.3s ease;
+  }
+  .calendar-header select:hover, .calendar-header select:focus {
+    box-shadow: 0 0 25px #0ff;
+    outline: none;
+  }
+
+  .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+    padding: 10px 0;
+    flex-grow: 1;
+  }
+
+  .day {
+    font-weight: 700;
+    color: #0ff;
+    text-shadow: 0 0 5px #0ff;
+    padding: 10px 0;
+    border-bottom: 1px solid #0ff;
+    user-select: none;
+  }
+  .date {
+    padding: 14px 0;
+    border-radius: 10px;
+    background-color: rgba(0, 255, 255, 0.1);
+    color: #0ff;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 0 5px #0ff inset;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    user-select: none;
+    user-drag: none;
+  }
+  .date:hover, .date.selected {
+    background-color: #00ffffaa;
+    box-shadow: 0 0 20px #0ff;
+  }
+
+  /* 예약 및 폼 영역 */
+  .person-selection {
+    margin: 20px auto 0 auto;
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+  }
+  .person-selection label {
+    font-size: 1.3rem;
+    color: #0ff;
+    text-shadow: 0 0 5px #0ff;
+    user-select: none;
+  }
+  .person-selection input[type="number"] {
+    width: 80px;
+    padding: 8px 10px;
+    font-size: 1.3rem;
+    border-radius: 12px;
+    border: none;
+    font-weight: bold;
+    text-align: center;
+    box-shadow: 0 0 10px #0ff inset;
+    color: #000;
+    transition: box-shadow 0.3s ease;
+  }
+  .person-selection input[type="number"]:focus {
+    outline: none;
+    box-shadow: 0 0 20px #0ff;
+    background-color: #ccffff;
+  }
+
+  form#planet {
+    margin: 30px auto 0 auto;
+    max-width: 400px;
+    text-align: center;
+  }
+  form#planet button {
+    width: 100%;
+  }
+
+  /* 선택된 날짜, 요일 표시 */
+  #reserveDate, #reserveDayOfWeek {
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid #0ff;
+    color: #0ff;
+    font-size: 1.2rem;
+    width: 180px;
+    text-align: center;
+    user-select: none;
+    margin-bottom: 12px;
+    font-weight: 700;
+  }
+
+  /* 반응형 */
+  @media (max-width: 1100px) {
+    .container {
+      flex-direction: column;
+      align-items: center;
+      gap: 40px;
+    }
+    .clock, .calendar {
+      max-width: 90vw;
+      flex: none;
+      width: 100%;
+    }
+    .clock canvas {
+      width: 90vw !important;
+      height: 90vw !important;
+      max-width: 500px !important;
+      max-height: 500px !important;
+    }
+  }
+  @media (max-width: 480px) {
+    h1 {
+      font-size: 2.5rem;
+    }
+    .time-controls label, .calendar-header select, .calendar-header button {
+      font-size: 1rem;
+    }
+    .time-controls input[type="number"] {
+      width: 50px;
+      padding: 6px;
+      font-size: 1rem;
+    }
+  }

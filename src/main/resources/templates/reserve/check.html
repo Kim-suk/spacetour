@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>예약 확인</title>
+  <link rel="stylesheet" href="/css/check.css">
+  <script src="/js/check.js"></script>
+</head>
+<body>
+  <h1>예약 확인</h1>
+
+  <div class="summary">
+    <p><strong>예약자:</strong> <span th:text="${loginId}"></span></p>
+    <p><strong>예약 좌석:</strong> <span th:text="${selectedSeats}"></span></p>
+    <p><strong>예약 날짜:</strong> <span th:text="${reserveDate}"></span></p>
+    <p><strong>예약 시간:</strong> <span th:text="${reserveHour + '시 ' + reserveMinute + '분'}"></span></p>
+    <p><strong>목적지 행성:</strong> <span th:text="${planet}"></span></p>
+    <p><strong>인원수:</strong> <span th:text="${personCount + '명'}"></span></p>
+   <p><strong>가격:</strong><span th:text="${price}"></span></p>
+  </div>
+
+  <div id="terms">
+    <p><strong>우주 여행 약관 동의</strong></p>
+
+    <div class="accordion-section">
+      <div class="accordion-header">제1장: 기본 조건</div>
+      <div class="accordion-content">
+        <p>1. 본 서비스는 지정된 행성으로의 우주 여행을 제공합니다. 고객은 본 약관에 동의한 후 예약을 진행할 수 있습니다.</p>
+        <p>2. 예약이 확정되면, 취소 및 변경은 불가능하며, 관련 비용이 발생할 수 있습니다.</p>
+        <p>3. 고객은 안전을 위해 여행 출발 전 건강 상태 확인서를 제출해야 합니다. 건강 상태가 우주 여행에 적합하지 않으면, 예약이 취소될 수 있습니다.</p>
+      <label><input type="checkbox" class="term-checkbox"> 제1장에 동의합니다.</label>
+      </div>
+    </div>
+
+    <div class="accordion-section">
+      <div class="accordion-header">제2장: 여행 안전</div>
+      <div class="accordion-content">
+        <p>1. 우주 여행 중 발생할 수 있는 사고에 대해서는 회사가 최대한 책임을 지지만, 고객의 부주의나 안전 규정을 위반한 경우 회사는 책임지지 않습니다.</p>
+        <p>2. 모든 여행자는 우주선 내에서의 안전 규정을 준수해야 하며, 우주선 내 안전 장비를 착용해야 합니다.</p>
+        <p>3. 여행 중 긴급 상황이 발생할 경우, 회사는 신속한 대처를 위해 최선을 다할 것입니다. 그러나 우주 환경의 특성상 예기치 못한 상황이 발생할 수 있으므로, 고객은 이를 이해하고 동의해야 합니다.</p>
+         <label><input type="checkbox" class="term-checkbox"> 제2장에 동의합니다.</label>
+       </div>
+    </div>
+
+    <div class="accordion-section">
+      <div class="accordion-header">제3장: 여행 일정 및 좌석</div>
+      <div class="accordion-content">
+        <p>1. 고객은 여행 예약 시 제공된 일정과 좌석을 확인하고 예약을 진행해야 합니다. 좌석 배정은 선착순으로 이루어집니다.</p>
+        <p>2. 특정 좌석의 경우 우주선 내 특수 요구사항에 따라 예약이 제한될 수 있습니다. 이에 대한 세부사항은 여행사 고객 서비스에서 확인할 수 있습니다.</p>
+      <label><input type="checkbox" class="term-checkbox"> 제3장에 동의합니다.</label>
+      </div>
+    </div>
+
+    <div class="accordion-section">
+      <div class="accordion-header">제4장: 목적지 행성</div>
+      <div class="accordion-content">
+        <p>1. 고객이 예약한 목적지 행성에 대한 정보는 여행 출발 전에 안내됩니다. 행성의 날씨, 환경 등은 예상치 못한 자연 변화로 인해 여행 중 변경될 수 있습니다.</p>
+        <p>2. 각 행성은 다르게 설정된 입국 규정이 있으므로, 여행자는 출발 전 관련 규정을 숙지하고 준비해야 합니다.</p>
+      <label><input type="checkbox" class="term-checkbox"> 제4장에 동의합니다.</label>
+      </div>
+    </div>
+
+    <div class="accordion-section">
+      <div class="accordion-header">제5장: 개인 정보 및 기밀</div>
+      <div class="accordion-content">
+        <p>1. 고객의 개인 정보는 여행 예약 및 고객 서비스 제공을 위해 사용되며, 다른 목적으로는 사용되지 않습니다. 고객은 개인 정보 보호에 대해 회사의 정책을 읽고 동의합니다.</p>
+        <p>2. 여행 중 발생하는 모든 사진, 영상 등은 회사의 홍보 자료로 사용될 수 있으며, 이에 대해 고객은 동의합니다.</p>
+      <label><input type="checkbox" class="term-checkbox"> 제5장에 동의합니다.</label>
+      </div>
+    </div>
+
+    <div class="accordion-section">
+      <div class="accordion-header">제6장: 약관 변경</div>
+      <div class="accordion-content">
+        <p>1. 본 약관은 언제든지 변경될 수 있습니다. 변경된 약관은 예약 전에 공지되며, 고객은 변경 사항에 동의한 후 예약을 진행할 수 있습니다.</p>
+        <p>2. 약관 변경 후 기존 예약에 대한 조건이 변경될 경우, 고객은 변경된 조건을 따르게 됩니다.</p>
+      <label><input type="checkbox" class="term-checkbox"> 제6장에 동의합니다.</label>
+      </div>
+    </div>
+
+    <div class="accordion-section">
+      <div class="accordion-header">제7장: 기타</div>
+      <div class="accordion-content">
+        <p>1. 본 약관에 명시되지 않은 사항에 대해서는 우주 여행 관련 법률에 따릅니다.</p>
+        <p>2. 여행 중 발생할 수 있는 모든 법적 분쟁은 고객과 회사 간에 협의하여 해결합니다.</p>
+      <label><input type="checkbox" class="term-checkbox"> 제7장에 동의합니다.</label>
+      </div>
+    </div>
+
+    <div class="checkbox-container">
+      <label for="terms-checkbox"><input type="checkbox" id="terms-checkbox" /> 위 약관에 모두 동의합니다.</label>
+    </div>
+  </div>
+
+  <div class="signature-container">
+    <p><strong>전자서명</strong></p>
+    <canvas id="signatureCanvas" width="400" height="150"></canvas>
+    <div class="button-container">
+        <button onclick="clearSignature()">지우기</button>
+        </div>
+      </div>
+
+      <button id="confirm-button" disabled onclick="submitReservation()">예약 확정</button>
+  </body>
+  </html>

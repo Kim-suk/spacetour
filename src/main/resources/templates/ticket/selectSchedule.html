@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>우주여행 일정 선택</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet" />
+  <style>
+    /* Reset & 기본 */
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0b0f29 0%, #12192e 100%);
+      color: #0ff;
+      font-family: 'Orbitron', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      overflow-x: hidden;
+    }
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 30px;
+      letter-spacing: 0.15em;
+      text-shadow: 0 0 8px #0ff, 0 0 20px #0ff;
+      user-select: none;
+    }
+
+    /* 컨테이너 */
+    .container {
+      background: rgba(0, 20, 60, 0.9);
+      padding: 40px 50px;
+      border: 2px solid #0ff;
+      border-radius: 16px;
+      box-shadow: 0 0 30px #0ff;
+      max-width: 480px;
+      width: 100%;
+      user-select: none;
+    }
+
+    /* 폼 요소 공통 */
+    label {
+      display: block;
+      font-size: 1.3rem;
+      margin-bottom: 8px;
+      color: #0ff;
+      text-shadow: 0 0 5px #0ff;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    input[type="text"],
+    input[type="date"],
+    input[type="number"],
+    select {
+      width: 100%;
+      padding: 10px 14px;
+      margin-bottom: 20px;
+      font-size: 1.2rem;
+      border-radius: 12px;
+      border: none;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 700;
+      color: #000;
+      box-shadow: 0 0 10px #0ff inset;
+      transition: box-shadow 0.3s ease;
+      user-select: text;
+    }
+    input[type="text"]:focus,
+    input[type="date"]:focus,
+    input[type="number"]:focus,
+    select:focus {
+      outline: none;
+      box-shadow: 0 0 20px #0ff;
+      background-color: #ccffff;
+    }
+
+    /* 라디오 버튼 */
+    .trip-type {
+      display: flex;
+      gap: 30px;
+      margin-bottom: 30px;
+      justify-content: center;
+    }
+    .trip-type label {
+      cursor: pointer;
+      user-select: none;
+    }
+    .trip-type input[type="radio"] {
+      margin-right: 8px;
+      cursor: pointer;
+    }
+
+    /* 복귀일 숨김/표시 */
+    #returnDateGroup {
+      display: none;
+    }
+
+    /* 버튼 */
+    button {
+      width: 100%;
+      background-color: #0ff;
+      color: #000;
+      border: none;
+      padding: 14px 0;
+      font-size: 1.5rem;
+      border-radius: 16px;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 0 18px #0ff;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      user-select: none;
+    }
+    button:hover {
+      background-color: #00ccff;
+      box-shadow: 0 0 30px #00ccff;
+    }
+
+    /* 반응형 */
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 2.2rem;
+        margin-bottom: 25px;
+      }
+      input[type="text"],
+      input[type="date"],
+      input[type="number"],
+      select {
+        font-size: 1rem;
+      }
+      button {
+        font-size: 1.3rem;
+      }
+    }
+  </style>
+</head>
+<body>
+	<h1>우주여행 일정 선택</h1>
+	<div class="container">
+	    <form id="selectScheduleForm" th:action="@{/ticket/selectFlight}" method="post" th:object="${scheduleRequestDTO}">
+
+	        <!-- 여행 유형 -->
+	        <div class="trip-type">
+	            <label>
+	                <input type="radio" th:field="*{tripType}" value="ONEWAY" onchange="toggleReturnFields()" />
+	                편도
+	            </label>
+	            <label>
+	                <input type="radio" th:field="*{tripType}" value="ROUNDTRIP" onchange="toggleReturnFields()" />
+	                왕복
+	            </label>
+	        </div>
+
+	        <!-- 출발지 -->
+	        <label for="departure">출발지</label>
+	        <select id="departure" th:field="*{departure}"  onchange="updateDestinationOptions()" required>
+	            <option value="" disabled selected>출발지를 선택하세요</option>
+	            <!--<option th:each="city : ${departureList}" th:value="${city}" th:text="${city}"></option>-->
+	        </select>
+
+	        <!-- 도착지 -->
+	        <label for="destination">도착지</label>
+	        <select id="destination" th:field="*{destination}" required>
+	            <option value="" disabled selected>도착지를 선택하세요</option>
+	           <!-- <option th:each="city : ${destinationList}" th:value="${city}" th:text="${city}"></option>-->
+	        </select>
+
+	        <!-- 출발일 -->
+	        <label for="departureDate">출발일</label>
+	        <input type="date" id="departureDate" th:field="*{departureDate}" required />
+
+	        <!-- 복귀일 -->
+	        <div id="returnDateGroup" style="display: none;">
+	            <label for="returnDate">복귀일</label>
+	            <input type="date" id="returnDate" th:field="*{returnDate}" />
+	        </div>
+
+	        <!-- 탑승 인원 -->
+	        <label for="passengerCount">탑승 인원</label>
+	        <input type="number"
+	               id="passengerCount"
+	               th:field="*{passengerCount}"
+	               min="1" max="3"
+	               required />
+
+	        <button type="submit">일정 선택 완료</button>
+	    </form>
+	</div>
+
+  <script>
+	function toggleReturnFields() {
+	  const checkedTripType = document.querySelector('input[name="tripType"]:checked');
+	  if (!checkedTripType) {
+	    // 선택된 tripType이 없으면 기본 처리 (편도 등)
+	    document.getElementById("returnDateGroup").style.display = "none";
+	    const returnDateInput = document.getElementById("returnDate");
+	    returnDateInput.value = "";
+	    returnDateInput.removeAttribute("required");
+	    return;
+	  }
+
+	  const tripType = checkedTripType.value;
+	  const returnDateGroup = document.getElementById("returnDateGroup");
+
+	  if (tripType === "ROUNDTRIP") {
+	    returnDateGroup.style.display = "block";
+	    document.getElementById("returnDate").setAttribute("required", "required");
+	  } else {
+	    returnDateGroup.style.display = "none";
+	    const returnDateInput = document.getElementById("returnDate");
+	    returnDateInput.value = "";
+	    returnDateInput.removeAttribute("required");
+	  }
+	}
+
+
+    // 폼 제출 시 간단 검증
+    document.getElementById("selectScheduleForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const form = e.target;
+      const tripType = form.tripType.value;
+      const departure = form.departure.value.trim();
+      const destination = form.destination.value.trim();
+      const departureDate = form.departureDate.value;
+      const returnDate = form.returnDate.value;
+      const passengerCount = form.passengerCount.value;
+
+      // 기본 검증
+      if (!departure) {
+        alert("출발지를 입력하세요.");
+        form.departure.focus();
+        return;
+      }
+      if (!destination) {
+        alert("도착지를 입력하세요.");
+        form.destination.focus();
+        return;
+      }
+      if (!departureDate) {
+        alert("출발일을 선택하세요.");
+        form.departureDate.focus();
+        return;
+      }
+      if (tripType === "ROUNDTRIP") {
+        if (!returnDate) {
+          alert("복귀일을 선택하세요.");
+          form.returnDate.focus();
+          return;
+        }
+        if (returnDate < departureDate) {
+          alert("복귀일은 출발일 이후여야 합니다.");
+          form.returnDate.focus();
+          return;
+        }
+      }
+      if (passengerCount < 1 || passengerCount > 3) {
+        alert("탑승 인원은 1명에서 10명 사이로 입력해주세요.");
+        form.passengerCount.focus();
+        return;
+      }
+
+      // 여기서 서버 전송 또는 다음 페이지 이동 로직 수행
+	  alert(`여행 유형: ${tripType === "ONEWAY" ? "편도" : "왕복"}
+	  출발지: ${departure}
+	  도착지: ${destination}
+	  출발일: ${departureDate}
+	  ${tripType === "ROUNDTRIP" ? `복귀일: ${returnDate}` : ""}
+	  탑승 인원: ${passengerCount}명`);
+
+
+      // 예: form.submit() 또는 fetch/ajax 처리 가능
+	  // 검증 통과 후 실제 폼 제출
+	    form.submit();
+    });
+	
+	const planetOrder = [
+	      "수성", "금성", "지구", "달", "화성", "목성", "토성",
+	      "천왕성", "해왕성", "세레스", "명왕성", "하우메아", "마케마케", "에리스"
+	    ];
+
+	    // select 박스에 옵션 추가 (기본 텍스트를 인자로 받음)
+	    function populateSelectOptions(select, options, defaultText) {
+	      select.innerHTML = "";
+	      const defaultOpt = document.createElement("option");
+	      defaultOpt.textContent = defaultText;
+	      defaultOpt.disabled = true;
+	      defaultOpt.selected = true;
+	      select.appendChild(defaultOpt);
+
+	      options.forEach(planet => {
+	        const opt = document.createElement("option");
+	        opt.value = planet;
+	        opt.textContent = planet;
+	        select.appendChild(opt);
+	      });
+	    }
+
+	    // 출발지 선택 시 → 도착지에서 해당 행성 제외
+	    function updateDestinationOptions() {
+	      const departure = document.getElementById("departure").value;
+	      const destinationSelect = document.getElementById("destination");
+
+	      const filteredDestinations = planetOrder.filter(planet => planet !== departure);
+	      populateSelectOptions(destinationSelect, filteredDestinations, "도착지를 선택하세요");
+	    }
+
+	    // 페이지 로드시 옵션 초기화 및 이벤트 등록
+	    function loadLocations() {
+	      const departureSelect = document.getElementById("departure");
+	      const destinationSelect = document.getElementById("destination");
+
+	      populateSelectOptions(departureSelect, planetOrder, "출발지를 선택하세요");
+
+	      // 처음엔 도착지는 출발지가 없으므로 빈 상태
+	      populateSelectOptions(destinationSelect, [], "도착지를 선택하세요");
+	    }
+
+	    window.addEventListener("DOMContentLoaded", () => {
+	      loadLocations();
+	      toggleReturnFields(); // 초기 상태에 맞게 복귀일 필드 토글
+	    });
+	 
+	 // 캘린더
+	 document.addEventListener("DOMContentLoaded", function () {
+	   const today = new Date().toISOString().split("T")[0];
+	   const departureInput = document.getElementById("departureDate");
+	   const returnInput = document.getElementById("returnDate");
+
+	   // 오늘 이전 날짜 선택 못하게 설정
+	   departureInput.setAttribute("min", today);
+	   returnInput.setAttribute("min", today);
+
+	   // 출발일 선택 시 복귀일 최소 날짜 설정
+	   departureInput.addEventListener("change", function () {
+	     const selectedDeparture = this.value;
+	     const tripType = document.querySelector('input[name="tripType"]:checked')?.value;
+
+		 if (tripType === "ROUNDTRIP") {
+		       returnInput.min = selectedDeparture;
+
+		       if (returnInput.value && returnInput.value < selectedDeparture) {
+		         returnInput.value = "";
+		       }
+		     } else {
+		       returnInput.min = today;
+		     }
+	   });
+
+	   // 복귀일 선택 시 출발일 최대 날짜 설정 (왕복인 경우만)
+	   returnInput.addEventListener("change", function () {
+	     const selectedReturn = this.value;
+	     const tripType = document.querySelector('input[name="tripType"]:checked')?.value;
+
+		 if (tripType === "ROUNDTRIP") {
+		       departureInput.max = selectedReturn;
+
+		       if (departureInput.value && departureInput.value > selectedReturn) {
+		         departureInput.value = "";
+		       }
+		     } else {
+		       departureInput.removeAttribute("max");
+		     }
+	   });
+
+	   // 여행 유형 변경 시 처리
+	   document.querySelectorAll('input[name="tripType"]').forEach(radio => {
+	     radio.addEventListener("change", function () {
+	       const tripType = this.value;
+
+	       if (tripType === "ROUNDTRIP") {
+	         returnInput.disabled = false;
+
+	         if (departureInput.value) {
+	           returnInput.min = departureInput.value;
+	         }
+
+	         if (returnInput.value) {
+	           departureInput.max = returnInput.value;
+	         }
+
+	       } else {
+	         // 편도인 경우 복귀일 비활성화 및 초기화
+	         returnInput.value = "";
+	         returnInput.disabled = true;
+	         returnInput.removeAttribute("min");
+	         departureInput.removeAttribute("max");
+	       }
+	     });
+	   });
+	   // 페이지 초기 로드시 복귀일 비활성화 여부 결정
+	   const initialTripType = document.querySelector('input[name="tripType"]:checked')?.value;
+	   if (initialTripType !== "ROUNDTRIP") {
+	     returnInput.disabled = true;
+	   }
+	 });
+	
+	// 페이지 로드 시 실행
+	  window.addEventListener("DOMContentLoaded", () => {
+	    toggleReturnFields();
+	    loadLocations();
+	  });
+  </script>
+</body>
+</html>

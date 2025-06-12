@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <title>Stripe & 다른 결제</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://js.stripe.com/v3/"></script>
+  <script src="https://js.tosspayments.com/v1/payment"></script>
+  <link rel="stylesheet" href="/css/payment.css" />
+  <script src="/js/toss.js"></script>
+</head>
+<body>
+  <div class="container">
+
+    <!-- Stripe 결제 -->
+    <div class="payment-box">
+      <h2>Stripe 결제</h2>
+      <p><strong>총 결제 금액 </strong><span th:text="${price}"></span></p>
+      <form id="payment-form">
+        <div class="form-row">
+          <label for="card-element">카드 정보 입력</label>
+          <div id="card-element"></div>
+        </div>
+        <button id="stripe-button"
+                th:data-order-id="${orderId}"
+                th:data-amount="${price}"
+                th:data-planet="${planet}"
+                th:data-login-id="${loginId}">
+          Stripe 결제
+        </button>
+      </form>
+      <div id="payment-message"></div>
+    </div>
+
+    <!-- Toss 결제 -->
+    <div class="payment-box">
+      <h2>다양한 결제 방법</h2>
+      <div class="coupon-row">
+        <input type="checkbox" id="coupon-box" />
+        <label for="coupon-box">5,000원 쿠폰 적용</label>
+      </div>
+      <div id="payment-method"></div>
+      <div id="agreement"></div>
+      <button id="toss-widget-button"
+              th:data-order-id="${orderId}"
+              th:data-amount="${price}"
+              th:data-login-id="${loginId}"
+              th:data-planet="${planet}">
+        다양한 결제 방법
+      </button>
+    </div>
+  </div>
+
+  <script th:inline="javascript">
+    const stripe = Stripe("pk_test_51ROFzEQxbEwhquNViM3oOBx7xOhZqqw9rjZK0UpFM4T8mvWGta883hitehG8CiCnC8w12DVTLy1NYA2uMwq3JENi00iLWRfD2a");
+    const elements = stripe.elements();
+    const card = elements.create('card');
+    card.mount('#card-element');
+
+    const stripeButton = document.getElementById('stripe-button');
+    const orderId = stripeButton.dataset.orderId;
+    const amount = parseInt(stripeButton.dataset.amount);
+    const loginId = stripeButton.dataset.loginId;
+    const planet = stripeButton.dataset.planet;
+
+    async function getUserInfo() {
+      const response = await fetch('/user/getUserInfo');
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "사용자 정보를 가져올 수 없습니다.");
+      }
+      return await response.json();
+    }
+
+    const form = document.getElementById('payment-form');
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      // 결제 진행 중 중복 클릭 방지 위해 버튼 비활성화
+      stripeButton.disabled = true;
+
+      try {
+        const user = await getUserInfo();
+
+        const response = await fetch('payment/create-payment-intent', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            amount: amount,
+            currency: 'usd',
+            orderId: orderId,
+            productName: planet,
+            buyerEmail: user.email,
+            buyerName: user.name
+          })
+        });
+
+        const { clientSecret } = await response.json();
+
+        const result = await stripe.confirmCardPayment(clientSecret, {
+          payment_method: { card: card }
+        });
+
+        if (result.error) {
+          alert("❌ 결제 실패: " + result.error.message);
+          // 실패 시 버튼 다시 활성화
+          stripeButton.disabled = false;
+        } else if (result.paymentIntent.status === 'succeeded') {
+          window.location.href = `/payment/success?session_id=${result.paymentIntent.id}`;
+        }
+      } catch (error) {
+        alert("❌ 에러: " + error.message);
+        // 에러 시 버튼 다시 활성화
+        stripeButton.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>행성 선택</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #000;
+      font-family: 'Orbitron', 'Poppins', sans-serif;
+      color: #0ff;
+    }
+
+    .reservation-header {
+      text-align: center;
+      margin: 40px 0 10px;
+      font-size: 2.5rem;
+      text-shadow: 0 0 10px #0ff;
+    }
+
+    .time-header {
+      text-align: center;
+      font-size: 2rem;
+      margin-bottom: 30px;
+      color: #0ff;
+    }
+
+   .planet-grid {
+     display: flex;
+     flex-wrap: wrap;
+     gap: 20px;
+   }
+
+   .planet-card {
+     width: 250px;
+     text-align: center;
+     border: 1px solid #ccc;
+     border-radius: 8px;
+     padding: 10px;
+     position: relative;
+   }
+
+   .planet-thumbnail {
+     width: 100%;
+     height: 200px;
+     background-size: cover;
+     background-position: center;
+     border-radius: 8px;
+   }
+
+   .select-btn {
+     background-color: #4CAF50;
+     color: white;
+     border: none;
+     padding: 10px;
+     cursor: pointer;
+     border-radius: 5px;
+     font-size: 16px;
+     margin-top: 10px;
+   }
+
+   .select-btn:hover {
+     background-color: #45a049;
+   }
+
+   .planet-iframe {
+     margin-top: 15px;
+   }
+
+    .planet-card h2 {
+      margin: 15px 0;
+      font-size: 1.2rem;
+      color: gold;
+    }
+
+    .select-btn {
+      padding: 10px 15px;
+      background-color: gold;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      color: black;
+      cursor: pointer;
+    }
+
+    @media (max-width: 1024px) {
+      .planet-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+   /* 모달 전체 배경 */
+   .planet-modal {
+     display: none;
+     position: fixed;
+     z-index: 999;
+     left: 0;
+     top: 0;
+     width: 100%;
+     height: 100%;
+     overflow: auto;
+     background-color: rgba(0,0,0,0.6);
+   }
+
+   /* 모달 내부 컨텐츠 */
+   .modal-content {
+     background-color: #fff;
+     margin: 5% auto;
+     padding: 0;
+     display: flex;
+     width: 80%;
+     max-width: 1000px;
+     height: 600px;
+     border-radius: 10px;
+     overflow: hidden;
+   }
+
+   /* 왼쪽 iframe 영역 */
+   .modal-left {
+     flex: 2;
+     background-color: #000;
+   }
+
+   /* 오른쪽 정보 영역 */
+   .modal-right {
+     flex: 1;
+     padding: 20px;
+     overflow-y: auto;
+   }
+
+  </style>
+</head>
+<body>
+   <!-- 모달 HTML -->
+   <div id="planetModal" class="planet-modal">
+     <div class="modal-content">
+       <!-- 왼쪽: 3D iframe -->
+       <div class="modal-left">
+         <iframe id="modal-iframe" width="100%" height="100%" frameborder="0"
+           allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"></iframe>
+       </div>
+
+       <!-- 오른쪽: 정보 영역 -->
+       <div class="modal-right">
+         <h2 id="modal-title"></h2>
+         <img id="modal-img" style="width: 100%; height: auto; margin-bottom: 10px;" />
+         <p id="modal-price" style="font-weight: bold;"></p>
+         <p id="modal-desc"></p>
+
+         <!-- form 태그 추가 -->
+         <form id="modalForm" method="post" action="/reserve/seat">
+           <!-- title, price 값을 담을 hidden input -->
+           <input type="hidden" name="planet" id="form-title" />
+           <input type="hidden" name="price" id="form-price" />
+           
+           <button type="submit">좌석 선택</button>
+         </form>
+       </div>
+     </div>
+   </div>
+  <!-- 예약 헤더 -->
+  <div>
+    <h2 class="reservation-header">
+      🪐 <span th:text="${reserveDate}"></span> (<span th:text="${reserveDayOfWeek}"></span>)
+    </h2>
+    <h3 class="time-header">
+      ⏰ <span th:text="${reserveHour}"></span>시 <span th:text="${reserveMinute}"></span>분
+     
+    </h3>
+   <h3><span th:text="${personCount}">명</span></h3>
+   
+      
+   
+  </div>
+
+  <div class="planet-grid">
+    <!-- 행성 카드 반복 -->
+    <div class="planet-card" data-planet-id="2369" data-thumbnail="https://solarsystem.nasa.gov/system/news_items/main_images/2369_mercury.jpg">
+      <div class="planet-thumbnail"></div>
+      <h2>수성 (Mercury)</h2>
+      <button class="select-btn" onclick="loadPlanetIframe(this)">여행 가기</button>
+      <div class="planet-iframe" style="display: none;"></div>
+    </div>
+
+    <div class="planet-card" data-planet-id="2342" data-thumbnail="https://solarsystem.nasa.gov/system/news_items/main_images/2342_venus.jpg">
+      <div class="planet-thumbnail"></div>
+      <h2>금성 (Venus)</h2>
+      <button class="select-btn" onclick="loadPlanetIframe(this)">여행 가기</button>
+      <div class="planet-iframe" style="display: none;"></div>
+    </div>
+
+    <div class="planet-card" data-planet-id="2393" data-thumbnail="https://solarsystem.nasa.gov/system/news_items/main_images/2393_earth.jpg">
+      <div class="planet-thumbnail"></div>
+      <h2>지구 (Earth)</h2>
+      <button class="select-btn" onclick="loadPlanetIframe(this)">여행 가기</button>
+      <div class="planet-iframe" style="display: none;"></div>
+    </div>
+
+    <div class="planet-card" data-planet-id="2372" data-thumbnail="https://solarsystem.nasa.gov/system/news_items/main_images/2372_mars.jpg">
+      <div class="planet-thumbnail"></div>
+      <h2>화성 (Mars)</h2>
+      <button class="select-btn" onclick="loadPlanetIframe(this)">여행 가기</button>
+      <div class="planet-iframe" style="display: none;"></div>
+    </div>
+
+    <div class="planet-card" data-planet-id="2375" data-thumbnail="https://solarsystem.nasa.gov/system/news_items/main_images/2375_jupiter.jpg">
+      <div class="planet-thumbnail"></div>
+      <h2>목성 (Jupiter)</h2>
+      <button class="select-btn" onclick="loadPlanetIframe(this)">여행 가기</button>
+      <div class="planet-iframe" style="display: none;"></div>
+    </div>
+
+    <div class="planet-card" data-planet-id="2355" data-thumbnail="https://solarsystem.nasa.gov/system/news_items/main_images/2355_saturn.jpg">
+      <div class="planet-thumbnail"></div>
+      <h2>토성 (Saturn)</h2>
+      <button class="select-btn" onclick="loadPlanetIframe(this)">여행 가기</button>
+      <div class="planet-iframe" style="display: none;"></div>
+    </div>
+
+    <div class="planet-card" data-planet-id="2344" data-thumbnail="https://solarsystem.nasa.gov/system/news_items/main_images/2344_uranus.jpg">
+      <div class="planet-thumbnail"></div>
+      <h2>천왕성 (Uranus)</h2>
+      <button class="select-btn" onclick="loadPlanetIframe(this)">여행 가기</button>
+      <div class="planet-iframe" style="display: none;"></div>
+    </div>
+
+    <div class="planet-card" data-planet-id="2364" data-thumbnail="https://solarsystem.nasa.gov/system/news_items/main_images/2364_neptune.jpg">
+      <div class="planet-thumbnail"></div>
+      <h2>해왕성 (Neptune)</h2>
+      <button class="select-btn" onclick="loadPlanetIframe(this)">여행 가기</button>
+      <div class="planet-iframe" style="display: none;"></div>
+    </div>
+
+    <div class="planet-card" data-planet-id="2400" data-thumbnail="https://solarsystem.nasa.gov/system/news_items/main_images/2400_ceres.jpg">
+      <div class="planet-thumbnail"></div>
+      <h2>세레스 (Ceres)</h2>
+      <button class="select-btn" onclick="loadPlanetIframe(this)">여행 가기</button>
+      <div class="planet-iframe" style="display: none;"></div>
+    </div>
+
+    <div class="planet-card" data-planet-id="2357" data-thumbnail="https://solarsystem.nasa.gov/system/news_items/main_images/2357_pluto.jpg">
+      <div class="planet-thumbnail"></div>
+      <h2>명왕성 (Pluto)</h2>
+      <button class="select-btn" onclick="loadPlanetIframe(this)">여행 가기</button>
+      <div class="planet-iframe" style="display: none;"></div>
+    </div>
+
+    <div class="planet-card" data-planet-id="2384" data-thumbnail="https://solarsystem.nasa.gov/system/news_items/main_images/2384_haumea.jpg">
+      <div class="planet-thumbnail"></div>
+      <h2>하우메아 (Haumea)</h2>
+      <button class="select-btn" onclick="loadPlanetIframe(this)">여행 가기</button>
+      <div class="planet-iframe" style="display: none;"></div>
+    </div>
+
+    <div class="planet-card" data-planet-id="2374" data-thumbnail="https://solarsystem.nasa.gov/system/news_items/main_images/2374_makemake.jpg">
+      <div class="planet-thumbnail"></div>
+      <h2>마케마케 (Makemake)</h2>
+      <button class="select-btn" onclick="loadPlanetIframe(this)">여행 가기</button>
+      <div class="planet-iframe" style="display: none;"></div>
+    </div>
+
+    <div class="planet-card" data-planet-id="2390" data-thumbnail="https://solarsystem.nasa.gov/system/news_items/main_images/2390_eris.jpg">
+      <div class="planet-thumbnail"></div>
+      <h2>에리스 (Eris)</h2>
+      <button class="select-btn" onclick="loadPlanetIframe(this)">여행 가기</button>
+      <div class="planet-iframe" style="display: none;"></div>
+    </div>
+  </div>
+  
+  <script>
+   document.addEventListener("DOMContentLoaded", () => {
+     const stored = sessionStorage.getItem("personCount");
+     console.log("planet에서 읽은 값:", stored);
+   });
+
+    // 페이지 로딩 시 썸네일 백그라운드 이미지 설정
+    document.addEventListener("DOMContentLoaded", function () {
+      document.querySelectorAll('.planet-card').forEach(card => {
+        const thumbUrl = card.dataset.thumbnail;
+        const thumb = card.querySelector('.planet-thumbnail');
+        thumb.style.backgroundImage = `url(${thumbUrl})`;
+        thumb.style.backgroundSize = "cover";
+        thumb.style.height = "200px";
+        thumb.style.borderRadius = "12px";
+      });
+    });
+
+    // 버튼 클릭 시 행성 정보 모달 표시
+    function loadPlanetIframe(button) {
+      const card = button.closest('.planet-card');
+      const planetId = card.dataset.planetId;
+      const thumbnail = card.dataset.thumbnail;
+      const title = card.querySelector('h2').innerText;
+      const price = `${(planetId % 10 + 1) * 10000}`;
+
+      // 필요한 정보들을 객체로 전달
+      const data = {
+        title: title,
+        price: price,
+        thumbnail: thumbnail,
+        planetId: planetId
+      };
+
+      // 모달 띄우기
+      openModal(data);
+    }
+
+    // 모달에 데이터 세팅 후 표시
+    function openModal(data) {
+      document.getElementById('modal-title').innerText = data.title;
+      document.getElementById('modal-img').src = data.thumbnail;
+      document.getElementById('modal-price').innerText = `🪙 예약 비용: ${data.price}`;
+      document.getElementById('modal-desc').innerText = `${data.title}에 대한 멋진 여행이 기다리고 있습니다!`;
+
+      // hidden input에 값 세팅 (예약 폼에서 사용)
+      document.getElementById('form-title').value = data.title;
+      document.getElementById('form-price').value = data.price;
+
+      // iframe 설정
+      const iframeUrl = `https://solarsystem.nasa.gov/gltf_embed/${data.planetId}/`;
+      document.getElementById('modal-iframe').src = iframeUrl;
+      document.getElementById('modal-iframe').style.display = 'block';
+
+      // 모달 표시
+      document.getElementById('planetModal').style.display = 'block';
+    }
+
+    // 모달 닫기
+    function closeModal() {
+      document.getElementById('planetModal').style.display = 'none';
+      document.getElementById('modal-iframe').src = ''; // 리소스 해제
+    }
+
+    // 바깥 클릭 시 모달 닫기
+    window.onclick = function(event) {
+      const modal = document.getElementById('planetModal');
+      if (event.target === modal) {
+        modal.style.display = 'none';
+        document.getElementById('modal-iframe').src = ''; // 리소스 해제
+      }
+    };
+  </script>
+
+
+</body>
+</html>

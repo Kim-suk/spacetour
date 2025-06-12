@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>NASA GIBS + ISS 위치</title>
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <!-- OpenLayers CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@7.3.0/ol.css" />
+
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: Arial, sans-serif;
+    }
+
+    #container {
+      display: flex;
+      height: 100vh;
+    }
+
+    #leafletMap, #olMap {
+      flex: 1;
+      position: relative;
+    }
+
+    #controls {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: rgba(255, 255, 255, 0.85);
+      padding: 10px 15px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      z-index: 999;
+    }
+
+    #info {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: rgba(255, 255, 255, 0.8);
+      padding: 10px;
+      border-radius: 6px;
+      z-index: 999;
+    }
+
+    h3 {
+      margin-top: 0;
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <!-- 왼쪽: NASA GIBS (Leaflet) -->
+    <div id="leafletMap">
+      <div id="controls">
+        <h3>NASA GIBS 야간 도시 불빛</h3>
+        <label for="dateInput">날짜 선택 (2012-01-01 ~ 오늘):</label>
+        <input type="date" id="dateInput" min="2012-01-01" />
+      </div>
+    </div>
+
+    <!-- 오른쪽: ISS 위치 (OpenLayers) -->
+    <div id="olMap">
+      <div id="info">ISS 위치: <span id="pos">불러오는 중...</span></div>
+    </div>
+  </div>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <!-- OpenLayers JS -->
+  <script src="https://cdn.jsdelivr.net/npm/ol@7.3.0/dist/ol.js"></script>
+
+  <script>
+    // 오늘 날짜 설정
+    const today = new Date().toISOString().slice(0, 10);
+    const dateInput = document.getElementById("dateInput");
+    dateInput.max = today;
+    dateInput.value = today;
+
+    // Leaflet: NASA GIBS
+    const leafletMap = L.map("leafletMap").setView([37.5665, 126.9780], 4);
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: '&copy; OpenStreetMap contributors',
+    }).addTo(leafletMap);
+
+    const gibsUrl = "https://gibs.earthdata.nasa.gov/wms/epsg3857/best/wms.cgi";
+    let gibsLayer = null;
+
+    function updateGibsLayer(dateStr) {
+      if (gibsLayer) {
+        leafletMap.removeLayer(gibsLayer);
+      }
+      gibsLayer = L.tileLayer.wms(gibsUrl, {
+        layers: "VIIRS_CityLights_2012",
+        format: "image/png",
+        transparent: true,
+        version: "1.3.0",
+        time: dateStr,
+        attribution: "NASA GIBS",
+      });
+      gibsLayer.addTo(leafletMap);
+    }
+
+    dateInput.addEventListener("change", (e) => {
+      const d = e.target.value;
+      if (d >= "2012-01-01" && d <= today) {
+        updateGibsLayer(d);
+      } else {
+        alert("2012-01-01 ~ 오늘 사이 날짜를 선택하세요.");
+      }
+    });
+
+    updateGibsLayer(today);
+
+    // OpenLayers: ISS 실시간 위치
+    const olMap = new ol.Map({
+      target: "olMap",
+      layers: [new ol.layer.Tile({ source: new ol.source.OSM() })],
+      view: new ol.View({
+        center: ol.proj.fromLonLat([0, 0]),
+        zoom: 2,
+      }),
+    });
+
+    const issSource = new ol.source.Vector();
+    const issLayer = new ol.layer.Vector({ source: issSource });
+    olMap.addLayer(issLayer);
+
+    const issIconStyle = new ol.style.Style({
+      image: new ol.style.Icon({
+        src: "https://upload.wikimedia.org/wikipedia/commons/d/d0/International_Space_Station.svg",
+        scale: 0.05,
+        anchor: [0.5, 0.5],
+      }),
+    });
+
+    async function updateISSPosition() {
+      try {
+        const res = await fetch("https://api.wheretheiss.at/v1/satellites/25544");
+        const data = await res.json();
+        const lon = data.longitude;
+        const lat = data.latitude;
+
+        document.getElementById("pos").textContent = `위도: ${lat.toFixed(2)}, 경도: ${lon.toFixed(2)}`;
+
+        issSource.clear();
+        const issFeature = new ol.Feature({
+          geometry: new ol.geom.Point(ol.proj.fromLonLat([lon, lat])),
+        });
+        issFeature.setStyle(issIconStyle);
+        issSource.addFeature(issFeature);
+        olMap.getView().setCenter(ol.proj.fromLonLat([lon, lat]));
+      } catch (e) {
+        console.error("ISS 위치 갱신 실패:", e);
+        document.getElementById("pos").textContent = "데이터를 불러올 수 없습니다.";
+      }
+    }
+
+    updateISSPosition();
+    setInterval(updateISSPosition, 5000);
+  </script>
+</body>
+</html>

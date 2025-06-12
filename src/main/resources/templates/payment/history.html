@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title th:text="${loginId} + '님의 결제 내역'">결제 내역</title>
+</head>
+<body>
+    <h2 th:text="${loginId} + '님의 결제 내역'">결제 내역</h2>
+
+    <table border="1" cellpadding="5" cellspacing="0">
+        <thead>
+            <tr>
+                <th>주문번호</th>
+                <th>금액</th>
+                <th>상품명</th>
+                <th>결제시간</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="h : ${histories}">
+                <td th:text="${h.orderId}">주문번호</td>
+                <td th:text="${h.amount}">금액</td>
+                <td th:text="${h.planet}">상품명</td>
+                <td th:text="${#temporals.format(h.paymentDate, 'yyyy-MM-dd HH:mm:ss')}">결제시간</td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(histories)}">
+                <td colspan="4" style="text-align:center; color:gray;">결제 내역이 없습니다.</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

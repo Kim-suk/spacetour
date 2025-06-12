@@ -1,0 +1,57 @@
+@charset "utf-8";
+
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/Pretendard/dist/web/static/Pretendard-dynamic-subset.css');/* regular-400, medium-500, semibold-600, bold-700 */ 
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&family=Play:wght@400;700&display=swap');/* Light-300, Regular-400, Medium-500, SemiBold-600, Bold-700 */ 
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap');
+
+*{-webkit-text-size-adjust:none}
+body{background:#fff;font-size:0.81em;font-family:var(--k-font)}
+body.open{overflow:hidden;position:absolute;width:100%;height:100%}
+h1, h2, h3, h4, h5, h6, input, button, textarea, select{font-family:var(--k-font)}
+#device_change{width:50%;border:1px solid #666;font-size:3.5em;box-shadow:none} 
+:root{--primary:#0869ec;--k-font:'Pretendard';--e-font:"Orbitron", serif;--mainsize:1400px}
+[data-aos=fade-blur]{opacity:0;filter:blur(10px);transition-property:opacity, filter!important}
+[data-aos=fade-blur].aos-animate{opacity:1;filter:blur(0)}
+[data-aos=fade-blur-up]{opacity:0;filter:blur(10px);transform:translateY(100px);transition-property:opacity, filter, transform!important}
+[data-aos=fade-blur-up].aos-animate{opacity:1;filter:blur(0);transform:translateY(0)}
+[data-aos=fade-blur-down]{opacity:0;filter:blur(10px);transform:translateY(-100px);transition-property:opacity, filter, transform!important}
+[data-aos=fade-blur-down].aos-animate{opacity:1;filter:blur(0);transform:translateY(0)}
+#wrapper{position:relative;min-width:1400px;background-color:#111}
+
+/* =========================== HEADER */
+#sh_hd{z-index:15;width:100%;min-width:1400px;font-size:15px}
+#sh_hd_wrapper{width:100%}
+
+/* =========================== MAIN */
+#section{overflow:hidden;position:relative;min-width:1400px;font-size:15px;font-weight:400;line-height:1.5;font-family:var(--k-font), var(--e-font)}
+#section .pl{white-space:pre-line}
+#section .section_en{font-size:16px;font-weight:700;text-align:center;color:#fff}
+#section .section_tit{margin-top:40px;font-size:35px;font-weight:700;text-align:center;line-height:1.3;color:#fff}
+#section .section_link{display:flex;justify-content:center;align-items:center;margin-top:40px;width:145px;height:52px;border-radius:26px;font-size:16px;font-weight:700}
+
+/* =========================== SNB */
+#sh_aside{position:relative;min-width:1140px;width:100%;margin:0 auto;z-index:1;background-color:#000}
+
+/* =========================== CONTAINER */
+#container{position:relative;width:100%;font-family: var(--k-font), var(--e-font)}
+#container_wrapper.sub{border-bottom:1px solid #e1e1e1;background:#fff}
+#content{overflow:hidden;position:relative;z-index:10;width:100%;max-width:1100px;min-height:550px;padding:70px 0;margin:0 auto;background:#fff}
+
+/* =========================== FOOTER */
+#ft{min-width:1400px;font-size:15px;color:rgba(255, 255, 255, .2);line-height:1.8;background-color:#000}
+#ft .top_cont{padding:160px 0;text-align:center}
+#ft .top_cont .logo{padding-bottom:25px;opacity:0.2}
+#ft .copy_cont{display:flex;align-items:center;justify-content:space-between;padding:15px 13.5%;border-top:1px solid rgba(255, 255, 255, 0.1)}
+#ft .copy_cont .admin{display:flex;align-items:center;gap:30px}
+#ft .copy_cont .admin a{font-size:13px;font-weight:700;color:rgba(255, 255, 255, 0.2);transition:0.2s;font-family:var(--e-font)}
+#ft .copy_cont .admin a:hover{color:rgba(255, 255, 255, 0.6)}
+
+/* 사이트맵 */
+#sh_site_map{position:relative;width:100%;font-family:'notokr-regular'}
+#sh_site_map > div{float:left;width:32%;min-height:280px;margin-right:2%}
+#sh_site_map > div:nth-of-type(3n){margin-right:0}
+#sh_site_map .sh_site_map_title{padding:10px 15px;border-bottom:2px solid #333;font-size:17px;font-weight:normal;text-align:center;color:#222;font-family:'notokr-bold'}
+#sh_site_map ul{padding:0 15px 15px}
+#sh_site_map .sh_site_map_box{min-height:155px;padding:17px 20px;border:1px solid #e1e1e1;border-top:none;font-size:14px;color:#333;line-height:40px}
+#sh_site_map .sh_site_map_box li{border-bottom:1px dotted #ccc}
+#sh_site_map .sh_site_map_box li:last-child{border:none}

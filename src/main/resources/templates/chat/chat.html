@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>실시간 채팅</title>
+  <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.5.1/dist/sockjs.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="/css/chat.css">
+  <script src="/js/chat.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+  <!-- 채팅방 목록 -->
+  <div id="room-list-container">
+    <h3>채팅방 목록</h3>
+    <input type="text" id="searchRoomInput" placeholder="방 이름 검색..." />
+    <ul id="roomListUl"></ul>
+  </div>
+
+  <!-- 오른쪽 접속자 목록 영역 -->
+  <div id="user-list-container">
+    <h3>접속중인 사용자</h3>
+    <ul id="userListUl"></ul>
+  </div>
+
+  <!-- 채팅 컨테이너는 가운데 -->
+  <div id="chat-container">
+	<div id="chat-header">
+	  실시간 채팅
+	  <button id="myChatBtn" style="float:right; margin-left: 5px;">나와의 채팅</button>
+	  <button id="mainBtn" style="float:right; margin-left: 5px;" onclick="location.href='/main/main'">홈</button>
+	</div>
+
+    <div id="info-area">
+      <div id="profile-preview" style="margin-top:10px;">
+        <img id="profileImage" src="/image/profile/default-profile.png" alt="프로필 사진" width="80" height="80" style="border-radius: 50%; object-fit: cover;" />
+      </div>
+	  <!-- 커스텀 우클릭 메뉴 -->
+	  <ul id="contextMenuP" style="display:none; position:absolute; list-style:none; padding:5px 0; margin:0; background:#fff; border:1px solid #ccc; box-shadow: 2px 2px 6px rgba(0,0,0,0.2); width:120px; z-index:1000;">
+	    <li class="context-menu-item" data-action="view" style="padding:8px 15px; cursor:pointer;">보기</li>
+	    <li class="context-menu-item" data-action="edit" style="padding:8px 15px; cursor:pointer;">수정</li>
+	  </ul>
+
+      <input id="sender" placeholder="내 닉네임 입력" th:value="${loginId}" readonly />
+      <input id="recipient" placeholder="상대방 이름" />
+      <input id="roomId" placeholder="채팅방 ID 입력" style="display:none;"/>
+
+      <!-- 숨김 처리된 버튼 -->
+      <button id="connectBtn">채팅방 연결</button>
+      <button id="leaveRoomBtn">채팅방 나가기</button>
+      <button onclick="disconnect()" style="display:none;">연결 해제</button>
+    </div>
+	
+	<!-- 채팅방 나가기 모달 -->
+	<div id="leaveRoomOverlay"></div>
+	<div id="leaveRoomModal">
+	  <p>정말로 채팅방을 나가시겠습니까?</p>
+	  <button id="confirmLeaveBtn">나가기</button>
+	  <button id="cancelLeaveBtn">취소</button>
+	</div>
+
+	<!-- 공지사항 영역 (채팅창 상단) -->
+	<div id="announcementBox" class="announcement-box" style="display:none;">
+	    <strong>📢 공지:</strong> <span id="announcementText"></span>
+	  <button id="closeAnnouncement" style="float:right; background:none; border:none; font-size:16px; cursor:pointer;">✕</button>
+	</div>
+
+	<div id="chatLog"></div>
+
+	<div id="input-area">
+	  <div id="replyBox" style="display: none;" class="reply-box">
+	    <span id="quotedText" class="quoted-text"></span>
+	    <button id="cancelReply" class="cancel-reply">❌</button>
+	  </div>
+
+	  <textarea id="messageInput" placeholder="메시지를 입력하세요..." autocomplete="off"></textarea>
+
+	  <label for="fileInput" class="file-upload-label">
+	     📎 파일 선택
+	   </label>
+	   <input type="file" id="fileInput" accept="image/*" style="display:none;" />
+
+	  <div id="imagePreviewContainer" style="display:none;">
+	    <p>이미지 미리보기:</p>
+	    <img id="imagePreview" src="" alt="미리보기">
+	  </div>
+
+	  <button id="emojiBtn" title="이모티콘">😊</button>
+	  <button id="sendBtn" disabled>전송</button>
+	</div>
+
+    <div id="emojiPicker" style="display:none; position:absolute; bottom:70px; background:#fff; border:1px solid #ccc; padding:5px; border-radius:8px; max-width: 300px; flex-wrap: wrap;"></div>
+
+    <div id="imageModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); justify-content:center; align-items:center; z-index:9999;">
+      <img id="modalImage" src="" style="max-width:90vw; max-height:90vh; border:5px solid white; border-radius:8px;">
+	  <button id="clearImageBtn" style="display:none;">×</button>
+    </div>
+
+    <ul id="contextMenu" style="display:none; position:absolute; background:#fff; border:1px solid #ccc; padding:5px; list-style:none; z-index:10000;">
+      <li data-action="viewall">전체보기</li>
+      <li data-action="reply">답장</li>
+      <li data-action="forward">공유</li>
+      <li data-action="toMe">나에게</li>
+      <li data-action="announce">공지</li>
+      <li data-action="copy">복사</li>
+      <li data-action="delete" class="delete">삭제</li>
+    </ul>
+
+    <div id="modalOverlay" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); z-index:1999;"></div>
+
+    <div id="textModal" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%);
+      background:white; border:2px solid #333; padding:20px; max-width:500px; max-height:70vh; overflow-y:auto; box-shadow:0 4px 10px rgba(0,0,0,0.3); z-index:2000;">
+      <pre id="modalTextContent" class="message-text" style="white-space:pre-wrap;"></pre>
+      <button id="closeModal">닫기</button>
+    </div>
+
+    <div id="toast"></div>
+
+    <button id="pushPermissionBtn" style="position: fixed; bottom: 100px; right: 20px; display:none;">푸시 알림 허용</button>
+  </div>
+
+  <script>
+	
+	// 채팅방 나갈시 상대방 메세지에 띄어줌 (순서가 중요)
+	function showSystemMessage(message) {
+	  const chatLog = document.getElementById("chatLog");
+	  if (!chatLog) {
+	    console.error("chatLog 요소가 없습니다!");
+	    return;
+	  }
+
+	  const systemMessageDiv = document.createElement("div");
+	  systemMessageDiv.className = "system-message";
+	  systemMessageDiv.textContent = message;
+
+	  chatLog.appendChild(systemMessageDiv);
+	  chatLog.scrollTop = chatLog.scrollHeight;
+	}
+	//
+	document.addEventListener("DOMContentLoaded", function () {
+	  const sender = document.getElementById("sender");
+	  const leaveRoomBtn = document.getElementById("leaveRoomBtn");
+
+	  const overlay = document.getElementById("leaveRoomOverlay");
+	  const modal = document.getElementById("leaveRoomModal");
+	  const confirmBtn = document.getElementById("confirmLeaveBtn");
+	  const cancelBtn = document.getElementById("cancelLeaveBtn");
+
+	  // 모달 열기
+	  leaveRoomBtn.addEventListener("click", function () {
+	    // display를 다시 보여지게 설정
+	    overlay.style.display = "block";
+	    modal.style.display = "block";
+
+	    // show 클래스 붙이기 (fade 애니메이션 등)
+	    overlay.classList.add("show");
+	    modal.classList.add("show");
+	  });
+
+	  // 모달 닫기
+	  cancelBtn.addEventListener("click", function () {
+	    overlay.classList.remove("show");
+	    modal.classList.remove("show");
+	    setTimeout(() => {
+	      overlay.style.display = "none";
+	      modal.style.display = "none";
+	    }, 300);
+	  });
+
+	  // 확인 버튼 → 실제 채팅방 나가기 처리
+	  confirmBtn.addEventListener("click", function () {
+	    overlay.classList.remove("show");
+	    modal.classList.remove("show");
+
+	    setTimeout(() => {
+	      overlay.style.display = "none";
+	      modal.style.display = "none";
+	    }, 300);
+		leaveRoom(currentRoomId);  // ✅ 방 나가기 함수 호출
+		
+	    if (stompClient && stompClient.connected) {
+	      stompClient.send("/app/chat/leave", {}, JSON.stringify({
+	        type: "LEAVE",
+	        sender: sender.value,
+	        roomId: currentRoomId,
+	        content: sender.value + "님이 채팅방에서 나갔습니다."
+	      }));
+
+	      stompClient.disconnect(function () {
+	        showSystemMessage(`${sender.value}님이 채팅방에서 나갔습니다.`);
+	      });
+	    } else {
+	      resetChatUI();
+	    }
+	  });
+
+	  function resetChatUI() {
+	    const chatLog = document.getElementById("chatLog");
+	    if (chatLog) chatLog.innerHTML = "";
+
+	    // 로컬 스토리지 / 세션 스토리지 초기화 (있다면)
+	    sessionStorage.removeItem('chatMessages');
+	    localStorage.removeItem('chatMessages');
+
+	    document.getElementById("recipient").value = "";
+	    document.getElementById("roomId").value = "";
+	    document.getElementById("messageInput").value = "";
+	    document.getElementById("imagePreviewContainer").style.display = "none";
+	    document.getElementById("emojiPicker").style.display = "none";
+	    document.getElementById("announcementBox").style.display = "none";
+
+	    document.getElementById("connectBtn").disabled = false;
+	    document.getElementById("sendBtn").disabled = true;
+	  }
+
+	});
+
+	function leaveChatRoom(roomId) {
+	    // LEAVE 메시지 전송
+	    stompClient.send("/app/chat/leave", {}, JSON.stringify({
+	        roomId: roomId,
+	        sender: $('#sender').val()
+	    }));
+
+	    // 나간 방 기록하기
+	    const leftRooms = JSON.parse(sessionStorage.getItem("leftRooms") || "[]");
+	    if (!leftRooms.includes(roomId)) {
+	        leftRooms.push(roomId);
+	        sessionStorage.setItem("leftRooms", JSON.stringify(leftRooms));
+	    }
+
+	    // 화면 초기화
+	    $('#chatLog').empty();
+	    currentPage = 0;
+	    isFirstLoad = true;
+	}
+
+
+	function leaveRoom(roomId) {
+	    const sender = $("#sender").val();
+
+	    // 나간 방 기록
+	    const leftRooms = JSON.parse(sessionStorage.getItem("leftRooms") || "[]");
+	    if (!leftRooms.includes(roomId)) {
+	        leftRooms.push(roomId);
+	        sessionStorage.setItem("leftRooms", JSON.stringify(leftRooms));
+	    }
+
+	    // LEAVE 메시지 서버로 전송
+	    const leaveMsg = {
+	        type: "LEAVE",
+	        roomId: roomId,
+	        sender: sender,
+	        content: `${sender}님이 채팅방에서 나갔습니다.`
+	    };
+	    if (stompClient && stompClient.connected) {
+	        stompClient.send("/app/chat/leave", {}, JSON.stringify(leaveMsg));
+	        stompClient.disconnect(() => {
+	            showSystemMessage(`${sender}님이 채팅방에서 나갔습니다.`);
+	        });
+	    }
+
+	    // 화면 초기화
+	    $("#chatLog").empty();
+	    $("#messageInput").val("");
+	    $("#roomId").val("");
+	    $('#recipient').val('');
+
+	    // 채팅방 목록 새로고침 (제거된 방 제외)
+	    loadChatRoomList();
+	}
+	function fetchChatRooms() {
+	  fetch('/chat/rooms')
+	    .then(response => response.json())
+	    .then(rooms => {
+	      if (!Array.isArray(rooms)) {
+	        console.error('서버 응답이 배열이 아닙니다:', rooms);
+	        return;
+	      }
+	      const roomListUl = document.getElementById('roomListUl');
+	      roomListUl.innerHTML = '';
+
+	      rooms.forEach(room => {
+	        const li = document.createElement('li');
+	        li.textContent = room.name;
+	        li.dataset.roomId = room.id;
+
+	        li.addEventListener('click', () => enterRoom(room.id, room.name));
+	        roomListUl.appendChild(li);
+	      });
+	    })
+	    .catch(error => {
+	      console.error('채팅방 목록 불러오기 실패:', error);
+	    });
+	}
+
+	function generateNewRoomId() {
+		    return 'room-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
+		}
+	function enterRoom(roomId, roomName) {
+	    const leftRooms = JSON.parse(sessionStorage.getItem("leftRooms") || "[]");
+
+	    // 나간 방이면 새로운 roomId 생성
+	    if (leftRooms.includes(roomId)) {
+	        roomId = generateNewRoomId(); // 임의의 새 방 ID 생성
+	    }
+
+	    document.getElementById('roomId').value = roomId;
+	    document.getElementById('recipient').value = roomName;
+
+	    connectToRoom(roomId);
+	}
+
+	  let meChatWindow = null;
+	    // "나와의 채팅" 버튼 클릭 시 새로운 창 열기
+	    document.getElementById("myChatBtn").addEventListener("click", function () {
+	      if (!meChatWindow || meChatWindow.closed) {
+	        meChatWindow = window.open(
+	          "/chat/meRoom",
+	          "meChatWindow",
+	          "width=400,height=600"
+	        );
+	      } else {
+	        meChatWindow.focus();
+	      }
+	    });
+	  // 부모 창에서 자식(meChatWindow)으로 메시지 전달도 필요 시 구현 가능
+	  function sendToMeChat(messageText) {
+	    if (meChatWindow && !meChatWindow.closed) {
+	      meChatWindow.postMessage({ type: 'message', text: messageText }, '*');
+	    }
+	  }
+	  
+	  const loginId = $('#sender').val(); // 또는 서버에서 세팅해놓은 변수 사용
+
+	  function openChatRoom(loginId) {
+	      if (loginId === 'me') {
+	          $('#chatRoomContainer').load('/chat/meRoom?loginId=me', function() {
+	              console.log('나와의 채팅창 로드 완료');
+	          });
+	      } else {
+	          $('#chatRoomContainer').hide();
+	      }
+	  }
+	  const readMessages = new Set();
+	  const profileImage = document.getElementById('profileImage');
+	  const contextMenu = document.getElementById('contextMenu');
+
+	  // 페이지 로드 시 저장된 프로필 이미지가 있으면 불러오기
+	  document.addEventListener('DOMContentLoaded', () => {
+	    const savedImage = localStorage.getItem('profileImage');
+	    if (savedImage) {
+	      profileImage.src = savedImage;
+	    }
+	  });
+
+	  // 우클릭 시 커스텀 메뉴 표시
+	  profileImage.addEventListener('contextmenu', (e) => {
+	    e.preventDefault();  // 기본 우클릭 메뉴 막기
+	    
+	    contextMenuP.style.top = `${e.pageY}px`;
+	    contextMenuP.style.left = `${e.pageX}px`;
+	    contextMenuP.style.display = 'block';
+	  });
+
+	  // 메뉴 항목 클릭 시 처리
+	  contextMenuP.addEventListener('click', (e) => {
+	    const action = e.target.getAttribute('data-action');
+	    if (!action) return;
+
+	    if (action === 'view') {
+	      // 프로필 사진 크게 보기 (예: 모달 열기 또는 새 창)
+	      window.open(profileImage.src, '_blank');
+	    } else if (action === 'edit') {
+	      // 수정 처리 (예: 파일 선택 다이얼로그 띄우기)
+	      openProfileEditDialog();
+	    }
+	    
+	    contextMenuP.style.display = 'none';  // 메뉴 닫기
+	  });
+
+	  // 빈 곳 클릭 시 메뉴 닫기
+	  document.addEventListener('click', () => {
+	    contextMenuP.style.display = 'none';
+	  });
+
+	  // 수정 다이얼로그 예시 함수
+	  function openProfileEditDialog() {
+	    // 예를 들어, 파일 선택 input 숨겨놓고 클릭 트리거
+	    let fileInput = document.getElementById('profileFileInput');
+	    if (!fileInput) {
+	      fileInput = document.createElement('input');
+	      fileInput.type = 'file';
+	      fileInput.accept = 'image/*';
+	      fileInput.style.display = 'none';
+	      fileInput.id = 'profileFileInput';
+	      document.body.appendChild(fileInput);
+
+	      fileInput.addEventListener('change', (e) => {
+	        const file = e.target.files[0];
+	        if (file) {
+	          // 여기서 업로드 처리 또는 미리보기 작업 수행
+	          const reader = new FileReader();
+	          reader.onload = (event) => {
+	            profileImage.src = event.target.result;  // 미리보기
+
+	            // 새로고침해도 이미지 유지되도록 localStorage에 저장
+	            try {
+	              localStorage.setItem('profileImage', event.target.result);
+	            } catch (err) {
+	              console.error('로컬스토리지 저장 실패:', err);
+	            }
+	          };
+	          reader.readAsDataURL(file);
+
+	          // 업로드 API 호출 등도 여기에 추가 가능
+	        }
+	      });
+	    }
+	    fileInput.click();
+	  }
+
+  </script>
+</body>
+</html>

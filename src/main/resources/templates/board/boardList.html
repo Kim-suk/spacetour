@@ -1,0 +1,173 @@
+	<!DOCTYPE html>
+<html xmlns:th="http://www.thymleaf.org">
+	<head>
+		<meta charset="utf-8">
+		<title>게시글 목록</title>
+		<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet">
+		<style>
+			@import url('https://fonts.googleapis.com/css2?family=Caveat&display=swap');
+			
+
+			body {
+			    font-family: 'Noto Sans KR', sans-serif;
+			    background: linear-gradient(to bottom, #555, #ddd); /* 위는 어두운 회색, 아래는 밝은 회색 */
+			    margin: 0;
+			    padding: 0;
+			    min-height: 100vh; /* 화면 전체 높이 확보 */
+			    display: flex;
+			    flex-direction: column;
+			}
+
+		        h1 {
+		            color: #fff;
+					font-size: 80px;
+					font-family: 'Caveat', cursive;
+		            padding-top: 20px;
+		        }
+
+		        hr {
+		            margin-top: 20px;
+		            border: 1px solid #ddd;
+		        }
+
+		        table {
+		            margin-top: 20px;
+		            border-collapse: collapse;
+		            width: 90%;
+		            max-width: 1200px;
+		            margin: 20px auto;
+		            background-color: #fff;
+		            border-radius: 8px;
+		            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+		        }
+
+		        th, td {
+		            padding: 12px;
+		            text-align: center;
+		            border: 1px solid #ddd;
+		        }
+
+		        th {
+		            background-color:#000;
+		            color: white;
+		            font-weight: bold;
+		        }
+
+		        td {
+		            color: #555;
+		        }
+
+		        td a {
+		            text-decoration: none;
+		            color: #000;
+		            font-weight: bold;
+		        }
+
+		        td a:hover {
+		            text-decoration: underline;
+		        }
+
+		        h3 {
+		            text-align: right;
+		            margin-top: 20px;
+		        }
+
+		        a {
+		            text-decoration: none;
+		           
+		            color: white;
+		            padding: 10px 20px;
+		            border-radius: 5px;
+		        }
+
+		        a:hover {
+		            background-color: #CECECE;
+		        }	
+
+		        /* 모바일 대응 */
+		        @media (max-width: 768px) {
+		            table {
+		                width: 100%;
+		            }
+
+		            td, th {
+		                padding: 8px;
+		            }
+
+		            a {
+		                padding: 8px 16px;
+		            }
+		        }
+				.pagination {
+				    text-align: center;
+				    padding: 15px;
+				    background-color: rgba(255, 255, 255, 0.1);
+				}
+
+				.pagination a {
+				    color: #fff;
+				    padding: 8px 12px;
+				    margin: 0 4px;
+				    text-decoration: none;
+				    background-color: #888;
+				    border-radius: 5px;
+				    transition: background-color 0.3s;
+				}
+
+				.pagination a.active {
+				    background-color: #444;
+				}
+
+				.pagination a:hover {
+				    background-color: #666;
+				}
+
+		    </style>
+	</head>
+	<body>
+		
+		<div style="flex: 1;">
+		<h1 align="center">ARTICLE</h1>
+		<hr>
+		<h3 align="center">
+					<a th:href="@{/main/main}" align="center">홈</a>
+					<a th:href="@{/board/insertBoard}" align="center">게시글 등록</a>
+				</h3>
+			<table align="center" border="1px solid" width="1500px">
+				<tr>
+					<th>번호</th>
+					<th>작성자</th>
+					<th>제목</th>
+					<th>작성일자</th>
+					<th>조회수</th>
+				</tr>
+				<tr th:each="board:${boardList}">
+					<td th:text="${board.articleNo}" align="center"></td> 
+					<td align="center">
+						<a th:href="@{/board/getBoard(articleNo=${board.articleNo})}" th:text="${board.title}"></a>
+					</td>
+					<td th:text="${board.id}" align="center"></td>
+					<td th:text="${board.writeDate}" align="center"></td>
+					<td th:text="${board.cnt}" align="center"></td>
+				</tr>
+			</table>
+		
+		</div>
+		<div class="pagination">
+		    <a href="?page=1">&laquo;</a> <!-- 이전 페이지 그룹 -->
+
+		    <a href="?page=1">1</a>
+		    <a href="?page=2">2</a>
+		    <a href="?page=3">3</a>
+		    <a href="?page=4">4</a>
+		    <a href="?page=5">5</a>
+		    <a href="?page=6">6</a>
+		    <a href="?page=7">7</a>
+		    <a href="?page=8">8</a>
+		    <a href="?page=9">9</a>
+		    <a href="?page=10" class="active">10</a>
+
+		    <a href="?page=11">&raquo;</a> <!-- 다음 페이지 그룹 -->
+		</div>
+	</body>
+</html>

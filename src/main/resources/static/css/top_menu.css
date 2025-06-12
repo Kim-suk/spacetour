@@ -1,0 +1,9 @@
+@charset "utf-8";
+#top_nav_wrap{position:absolute;width:100%;padding:0 13.5%;display:flex;justify-content:space-between;align-items:center;height:100px;z-index:99}
+#top_nav_wrap .right{display:flex;justify-content: flex-end; align-items:center}
+#r_menu{display:flex}
+
+#top_nav{display:flex;align-items:center; justify-content: flex-end}
+#top_nav > li{position:relative}
+#top_nav > li > a{display:block;padding:0 30px;letter-spacing:0;font-size:15px;font-weight:600;font-family:var(--k-font);line-height:100px;color:#fff;transition:all .2s;}
+

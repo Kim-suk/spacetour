@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>마이페이지</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Orbitron', sans-serif;
+            transition: background-color 0.5s, color 0.5s;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-top: 50px;
+        }
+
+        form {
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        table {
+            width: 100%;
+            max-width: 600px;
+            border-collapse: separate;
+            border-spacing: 15px;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.3);
+        }
+
+        td {
+            font-size: 1rem;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        input[type="email"] {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        input[readonly] {
+            color: #999;
+        }
+
+        input[type="submit"],
+        input[type="button"],
+        input[type="reset"] {
+            padding: 12px 24px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        input[type="submit"]:hover,
+        input[type="button"]:hover,
+        input[type="reset"]:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px #00ffff;
+        }
+
+        p {
+            margin: 0;
+            text-align: right;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #00ffcc;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        .theme-toggle:hover {
+            background: #009988;
+        }
+
+        body.dark {
+            background-color: #0f0f0f;
+            color: #fff;
+        }
+
+        body.dark h1 {
+            color: #00ffcc;
+            text-shadow: 0 0 10px #00ffcc;
+        }
+
+        body.dark table {
+            background-color: #1a1a1a;
+        }
+
+        body.dark input[type="text"],
+        body.dark input[type="password"],
+        body.dark input[type="email"] {
+            background-color: #2c2c2c;
+            color: #fff;
+            box-shadow: inset 0 0 5px #00ffcc;
+        }
+
+        body.dark input[readonly] {
+            background-color: #444;
+        }
+
+        body.dark input[type="submit"],
+        body.dark input[type="button"],
+        body.dark input[type="reset"] {
+            background: linear-gradient(135deg, #00ffcc, #0066ff);
+            color: #000;
+            box-shadow: 0 0 10px #00ffcc;
+        }
+
+        body:not(.dark) {
+            background-color: #f3f3f3;
+            color: #111;
+        }
+
+        body:not(.dark) h1 {
+            color: #0066ff;
+        }
+
+        body:not(.dark) table {
+            background-color: #ffffff;
+            box-shadow: 0 0 10px rgba(0, 100, 255, 0.2);
+        }
+
+        body:not(.dark) input[type="text"],
+        body:not(.dark) input[type="password"],
+        body:not(.dark) input[type="email"] {
+            background-color: #eee;
+            color: #000;
+        }
+
+        .profile-img-wrapper {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        #profileImg {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #00ffcc;
+        }
+
+        .file-input-wrapper {
+            margin-top: 10px;
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 30px 0;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+        }
+
+        .section-title {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 1.5rem;
+        }
+
+        .table {
+            width: 90%;
+            margin: 0 auto 30px auto;
+            border-collapse: collapse;
+        }
+
+        .table th,
+        .table td {
+            padding: 12px;
+            border: 1px solid #ccc;
+            text-align: center;
+        }
+
+        .table-secondary {
+            background-color: #e9ecef;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-muted {
+            color: #888;
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2rem; margin-top: 30px; }
+            table { padding: 20px; }
+            .btn-group { flex-direction: column; gap: 15px; }
+        }
+    </style>
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()">🌓 모드 전환</button>
+
+<form>
+    <div>
+        <h1>마이페이지</h1>
+
+        <!-- 프로필 이미지 -->
+        <div class="profile-img-wrapper">
+			<img th:src="@{${member.profileImage}}" alt="Profile Image" id="profileImg">
+        </div>
+
+        <table>
+            <tr><td><strong>로그인 ID:</strong></td><td th:text="${loginId}">loginId</td></tr>
+            <tr><td><strong>회원명:</strong></td><td th:text="${member.name}">userName</td></tr>
+            <tr><td><strong>가입일:</strong></td><td th:text="${#dates.format(member.joinDate, 'yyyy-MM-dd')}">joinDate</td></tr>
+            <tr><td><strong>성별:</strong></td><td th:text="${member.gender}">gender</td></tr>
+            <tr><td><strong>전화번호:</strong></td><td th:text="${member.phone}">phoneNumber</td></tr>
+            <tr><td><strong>이메일:</strong></td><td th:text="${member.email}">email</td></tr>
+            <tr><td><strong>주소:</strong></td><td th:text="${member.address}">address</td></tr>
+        </table>
+    </div>
+</form>
+
+<!-- 구매 내역 -->
+<div>
+    <h4 class="section-title">🛒 구매 내역</h4>
+    <table class="table">
+        <thead class="table-secondary">
+        <tr><th>상품명</th><th>구매일</th><th>가격</th></tr>
+        </thead>
+        <tbody>
+        <tr th:each="order : ${orderList}">
+            <td th:text="${order.itemName}">상품명</td>
+            <td th:text="${#dates.format(order.orderDate, 'yyyy-MM-dd')}">구매일</td>
+            <td th:text="${order.price}">가격</td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(orderList)}">
+            <td colspan="3" class="text-center text-muted">구매 내역이 없습니다.</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- 예약 내역 -->
+<div>
+    <h4 class="section-title">📅 예약 내역</h4>
+    <table class="table">
+        <thead class="table-secondary">
+        <tr><th>예약 서비스</th><th>예약일</th><th>상태</th></tr>
+        </thead>
+        <tbody>
+        <tr th:each="res : ${reservationList}">
+            <td th:text="${res.serviceName}">서비스명</td>
+            <td th:text="${#dates.format(res.reserveDate, 'yyyy-MM-dd')}">예약일</td>
+            <td th:text="${res.status}">상태</td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(reservationList)}">
+            <td colspan="3" class="text-center text-muted">예약 내역이 없습니다.</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- 버튼 그룹 -->
+<div class="btn-group">
+    <a href="/mypage/manageMember" class="btn btn-primary">회원정보 수정하기</a>
+    <button class="btn btn-danger" onclick="confirmDeleteAccount()">탈퇴하기</button>
+    <a href="/main/main" class="btn btn-secondary">홈으로 가기</a>
+</div>
+
+<script>
+    function uploadProfileImage() {
+        const fileInput = document.getElementById('profileImageUpload');
+        const profileImg = document.getElementById('profileImg');
+        const reader = new FileReader();
+
+        reader.onload = function(event) {
+            profileImg.src = event.target.result;
+        };
+
+        if (fileInput.files && fileInput.files[0]) {
+            reader.readAsDataURL(fileInput.files[0]);
+        }
+    }
+
+    function confirmDeleteAccount() {
+        if (confirm("정말로 탈퇴하시겠습니까? 이 작업은 되돌릴 수 없습니다.")) {
+            window.location.href = "/member/deleteAccount";
+        }
+    }
+
+    function toggleTheme() {
+        document.body.classList.toggle("dark");
+        localStorage.setItem("theme", document.body.classList.contains("dark") ? "dark" : "light");
+    }
+
+    window.onload = function () {
+        if (localStorage.getItem("theme") === "dark") {
+            document.body.classList.add("dark");
+        }
+    }
+</script>
+</body>
+</html>

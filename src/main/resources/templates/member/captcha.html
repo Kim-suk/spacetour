@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>보안코드 확인</title>
+    <style>
+		body {
+		           font-family: Arial, sans-serif;
+		           background-color: #f3f3f3;
+		           margin: 0;
+		           height: 100vh;
+		           display: flex;
+		           justify-content: center;
+		           align-items: center;
+		           overflow: hidden;
+		       }
+
+		       .captcha-box {
+		           background: rgba(255, 255, 255, 0.2); /* 반투명 흰색 */
+		           backdrop-filter: blur(15px); /* 유리모양 효과 */
+		           -webkit-backdrop-filter: blur(15px);
+		           border-radius: 15px;
+		           padding: 40px;
+		           box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+		           text-align: center;
+		           z-index: 1;
+		       }
+
+		       input[type="text"] {
+		           padding: 10px;
+		           width: 200px;
+		           margin: 10px 0;
+		       }
+
+		       input[type="submit"], button {
+		           padding: 10px 20px;
+		           background-color: #5c85d6;
+		           color: white;
+		           border: none;
+		           border-radius: 5px;
+		           cursor: pointer;
+		       }
+
+		       .msg {
+		           color: red;
+		           margin-bottom: 10px;
+		       }
+
+		       img {
+		           margin: 10px 0;
+		           cursor: pointer;
+		           width: 400px;
+		           height: 70px;
+		           object-fit: contain;
+		       }
+
+		       .background-wrapper {
+		           position: fixed;
+		           top: 0;
+		           left: 0;
+		           width: 100vw;
+		           height: 100vh;
+		           overflow: hidden;
+		           z-index: -1;
+		       }
+
+		       .background-video {
+		           position: absolute;
+		           top: 50%;
+		           left: 50%;
+		           min-width: 100%;
+		           min-height: 100%;
+		           transform: translate(-50%, -50%);
+		           object-fit: cover;
+		           z-index: -1;
+		       }
+
+    </style>
+</head>
+<body>
+	<div class="background-wrapper">
+	  <video class="background-video" autoplay muted loop playsinline>
+	    <source src="/image/galaxy.webm" type="video/webm">
+	    <!-- 다른 포맷도 넣을 수 있음, 예: <source src="future-0-bg.mp4" type="video/mp4"> -->
+	    브라우저가 비디오 태그를 지원하지 않습니다.
+	  </video>
+	</div>
+<div class="captcha-box">
+    <h2>보안코드를 입력하세요</h2>
+
+    <p th:if="${msg}" class="msg" th:text="${msg}"></p>
+
+    <form th:action="@{/member/verifyCaptcha}" method="post">
+        <img th:src="@{/member/captchaImage}" onclick="this.src='/member/captchaImage?'+Math.random()" />
+        <br>
+        <input type="text" name="captcha" placeholder="보안코드 입력" required />
+        <br>
+        <button type="submit">확인</button>
+    </form>
+</div>
+
+</body>
+</html>

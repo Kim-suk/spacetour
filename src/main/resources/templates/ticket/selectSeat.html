@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <title>좌석 선택</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      display: flex;
+      padding: 20px;
+      gap: 40px;
+    }
+
+	.seat-layout {
+	  display: flex;
+	  flex-direction: column;
+	  gap: 30px;
+	  position: relative;
+	}
+
+	.seat-section {
+	  border-left: 5px solid red;
+	  padding-left: 20px;
+	}
+
+	.section-label {
+	  font-size: 18px;
+	  font-weight: bold;
+	  margin-bottom: 10px;
+	  color: #222;
+	}
+
+    .seat-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 40px);
+      gap: 5px;
+    }
+
+    .seat-img {
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+    }
+
+    .grade-label {
+      position: absolute;
+      font-weight: bold;
+      font-size: 16px;
+      color: red;
+    }
+
+    .grade-label.first { top: 40px; left: -100px; }
+    .grade-label.business { top: 200px; left: -100px; }
+    .grade-label.economy { top: 380px; left: -100px; }
+
+    .info-panel {
+      background: #eee;
+      padding: 20px;
+      width: 300px;
+    }
+
+    .info-panel h2 {
+      margin-top: 0;
+    }
+
+    .seat-info {
+      margin-top: 10px;
+      background: white;
+      padding: 10px;
+      border: 1px solid #ccc;
+    }
+
+    .btn-area {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+
+    .btn-area button {
+      padding: 10px 20px;
+      font-size: 16px;
+    }
+
+    .seat-count {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+	<div class="seat-layout">
+	  <div class="seat-section first">
+	    <div class="section-label">퍼스트</div>
+	    <div id="firstSeatArea" class="seat-grid"></div>
+	  </div>
+
+	  <div class="seat-section business">
+	    <div class="section-label">비즈니스</div>
+	    <div id="businessSeatArea" class="seat-grid"></div>
+	  </div>
+
+	  <div class="seat-section economy">
+	    <div class="section-label">이코노미</div>
+	    <div id="economySeatArea" class="seat-grid"></div>
+	  </div>
+	</div>
+
+  <div class="info-panel">
+    <h2>출발지 <b>지구</b> ▶ 도착지 <b>화성</b></h2>
+    <p>2025-05-23 00:00 ~ 2025-05-23 20:00</p>
+    <p>이코노미/비즈니스/퍼스트</p>
+    <p>성인 (1~3)</p>
+
+    <h3>선택된 좌석 정보 (<span id="selectedCount" class="seat-count">0</span>석)</h3>
+    <div id="selectedSeatInfo"></div>
+
+    <div class="btn-area">
+      <button type="button" onclick="goToReturn()">다음</button>
+      <button type="submit" form="seatForm">선택완료</button>
+    </div>
+
+    <form id="seatForm" th:action="@{/confirmReservation}" method="post">
+      <input type="hidden" name="departureSeatIds" id="departureSeatIds" />
+      <input type="hidden" name="returnSeatIds" id="returnSeatIds" />
+      <input type="hidden" name="departureGrade" id="departureGrade" />
+      <input type="hidden" name="returnGrade" id="returnGrade" />
+    </form>
+  </div>
+  
+  <script th:inline="javascript">
+  /*<![CDATA[*/
+  const tripType = [[${request.tripType != null}]] ? '[[${request.tripType.name}]]' : 'ONEWAY';
+     const departureMap = [[${departureMapJson}]];
+     const returnMap = [[${returnMapJson}]];
+     const passengerCount = [[${request.passengerCount}]];
+     const allowedDepartureGrade = [[${departureSeatGrade != null}]] ? '[[${departureSeatGrade.name}]]' : 'ECONOMY';
+     const allowedReturnGrade = [[${returnSeatGrade != null}]] ? '[[${returnSeatGrade.name}]]' : null;
+
+
+	
+    const departureSelected = new Set();
+    const returnSelected = new Set();
+
+    const seatImages = {
+      'FIRST_AVAILABLE':'/image/seat_first_available.png',
+      'FIRST_RESERVED':'/image/seat_first_reserved.png',
+      'FIRST_BLOCKED':'/image/seat_first_blocked.png',
+      'FIRST_SELECTED':'/image/seat_first_selected.png',
+      'BUSINESS_AVAILABLE':'/image/seat_business_available.png',
+      'BUSINESS_RESERVED':'/image/seat_business_reserved.png',
+      'BUSINESS_BLOCKED':'/image/seat_business_blocked.png',
+      'BUSINESS_SELECTED':'/image/seat_business_selected.png',
+      'ECONOMY_AVAILABLE':'/image/seat_economy_available.png',
+      'ECONOMY_RESERVED':'/image/seat_economy_reserved.png',
+      'ECONOMY_BLOCKED':'/image/seat_economy_blocked.png',
+      'ECONOMY_SELECTED':'/image/seat_economy_selected.png'
+    };
+
+	function renderSeats(id, map, selected, allowedGrade, seatTypePrefix, targetGrade) {
+	  const area = document.getElementById(id);
+	  area.innerHTML = '';
+
+	  map.forEach(row => row.forEach(cell => {
+	    if (!cell || !cell.grade) return;
+
+	    const grade = cell.grade.toUpperCase();
+	    if (targetGrade && grade !== targetGrade.toUpperCase()) return;
+
+	    const seatId = cell.seatNumber;
+
+	    const isGradeAllowed = (grade === allowedGrade.toUpperCase());
+	    const actualStatus = cell.blocked ? 'BLOCKED' : (cell.reserved ? 'RESERVED' : 'AVAILABLE');
+	    const displayStatus = isGradeAllowed ? actualStatus : 'BLOCKED';
+
+	    const isSelected = selected.has(seatId);
+	    const key = isSelected ? grade + '_SELECTED' : grade + '_' + displayStatus;
+
+	    if (!seatImages[key]) return;
+
+	    const img = document.createElement('img');
+	    img.src = seatImages[key];
+	    img.className = 'seat-img';
+	    img.title = `${seatId} (${grade})`;
+
+		img.onclick = () => {
+		  if (displayStatus !== 'AVAILABLE') return;
+
+		  if (isSelected) {
+		    selected.delete(seatId);
+		  } else if (selected.size < passengerCount) {
+		    selected.add(seatId);
+		  } else {
+		    alert('인원수만큼만 선택 가능합니다.');
+		    return;
+		  }
+
+		  renderAllSeats();
+		  updateSelectedInfo();
+		};
+
+	    area.appendChild(img);
+	  }));
+	}
+
+
+
+
+    function updateSelectedInfo() {
+      const list = [...departureSelected];
+      const area = document.getElementById('selectedSeatInfo');
+      area.innerHTML = '';
+      document.getElementById('selectedCount').innerText = list.length;
+      list.forEach(id => {
+        const div = document.createElement('div');
+        div.className = 'seat-info';
+        div.innerHTML = `좌석번호 : ${id}<br/>좌석등급 : ${allowedDepartureGrade}`;
+        area.appendChild(div);
+      });
+    }
+
+    function goToReturn() {
+      if (tripType === 'ROUNDTRIP') {
+        location.href = '/selectSeat?step=return';
+      }
+    }
+
+	function renderAllSeats() {
+	  const areas = {
+	    FIRST: document.getElementById('firstSeatArea'),
+	    BUSINESS: document.getElementById('businessSeatArea'),
+	    ECONOMY: document.getElementById('economySeatArea'),
+	  };
+
+	  // 영역 초기화
+	  Object.values(areas).forEach(area => area.innerHTML = '');
+
+	  departureMap.forEach(row => row.forEach(cell => {
+	    if (!cell || !cell.grade) return;
+
+	    const grade = cell.grade.toUpperCase();
+	    const seatId = cell.seatNumber;
+
+	    const actualStatus = cell.blocked ? 'BLOCKED' : (cell.reserved ? 'RESERVED' : 'AVAILABLE');
+
+	    // 선택된 좌석인지 여부
+	    const isSelected = departureSelected.has(seatId);
+
+	    // 유저가 선택 가능한 등급인지 여부
+	    const isGradeAllowed = (grade === allowedDepartureGrade.toUpperCase());
+
+	    // 좌석 이미지 키는 유저가 선택 가능한 등급이 아니면 BLOCKED 이미지로 고정
+	    const displayStatus = isGradeAllowed ? actualStatus : 'BLOCKED';
+	    const key = isSelected ? grade + '_SELECTED' : grade + '_' + displayStatus;
+
+	    if (!seatImages[key]) return;
+
+	    const img = document.createElement('img');
+	    img.src = seatImages[key];
+	    img.className = 'seat-img';
+	    img.title = `${seatId} (${grade})`;
+
+	    img.onclick = () => {
+	      // 클릭은 선택 가능한 등급이고, 상태가 AVAILABLE일 때만 허용
+	      if (!isGradeAllowed || actualStatus !== 'AVAILABLE') return;
+
+	      if (isSelected) {
+	        departureSelected.delete(seatId);
+	      } else if (departureSelected.size < passengerCount) {
+	        departureSelected.add(seatId);
+	      } else {
+	        alert('인원수만큼만 선택 가능합니다.');
+	        return;
+	      }
+
+	      renderAllSeats();
+	      updateSelectedInfo();
+	    };
+
+	    areas[grade].appendChild(img);
+	  }));
+	}
+
+
+
+	renderAllSeats();
+
+	// 디버그용 로그 출력
+	console.log("🔍 tripType:", tripType);
+	console.log("🔍 departureMap:", departureMap);
+	console.log("🔍 returnMap:", returnMap);
+	console.log("🔍 passengerCount:", passengerCount);
+	console.log("🔍 allowedDepartureGrade:", allowedDepartureGrade);
+	console.log("🔍 allowedReturnGrade:", allowedReturnGrade);
+  /*]]>*/
+  </script>
+</body>
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>🌌 우주력 캘린더</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="/js/calendar.js" defer></script>
+  <link rel="stylesheet" href="/css/calendar.css">
+
+  <style>
+    /* 안내 팝업 스타일 */
+    #noticeModal {
+      display: none;
+      position: fixed;
+      top: 10%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: white;
+      border: 2px solid #333;
+      border-radius: 12px;
+      width: 500px;
+      z-index: 9999;
+      padding: 20px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+    }
+
+    #noticeModal h2 {
+      margin-top: 0;
+    }
+
+    #noticeModal ul {
+      line-height: 1.6;
+      padding-left: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ✅ 안내 팝업 -->
+  <div id="noticeModal">
+    <h2>🚀 우주여행 전 필수 안내사항</h2>
+    <ul>
+      <li><strong>환불 정책</strong>: 예약 후 7일 이내 전액 환불 가능. 이후 일정 취소 시 위약금 발생.</li>
+      <li><strong>예약 조건</strong>: 탑승일 기준 최소 2주 이전에 예약해야 합니다.</li>
+      <li><strong>건강 조건</strong>: 
+        <ul>
+          <li>최근 1년 이내 수술을 받지 않은 분 (건강 증빙 서류 제출 필수)</li>
+          <li>심장병, 고혈압 등 중증 질환 보유자는 탑승 불가</li>
+        </ul>
+      </li>
+      <li><strong>체중 조건</strong>: 35kg 이상 ~ 150kg 미만</li>
+      <li><strong>연령 조건</strong>: 만 14세 이상만 탑승 가능 (미성년자의 경우 보호자 동의 필요)</li>
+      <li><strong>주의사항</strong>: 
+        <ul>
+          <li>우주선 내부에서는 강한 진동 및 무중력 상태를 경험할 수 있습니다.</li>
+          <li>탑승 전 정해진 교육 일정(사전 안전 교육 2회)에 반드시 참석해야 합니다.</li>
+          <li>탑승 당일 음주 또는 약물 복용이 확인될 경우 탑승이 제한될 수 있습니다.</li>
+          <li>지연 또는 기상 문제로 인한 일정 변경 가능성이 있습니다.</li>
+        </ul>
+      </li>
+    </ul>
+    <label style="display: block; margin-top: 15px;">
+      <input type="checkbox" id="hideToday"> 오늘 하루 보지 않기
+    </label>
+    <button onclick="closeNoticeModal()" style="margin-top: 10px;">확인</button>
+  </div>
+
+  <!-- 🔔 팝업 관련 스크립트 -->
+  <script>
+    function setCookie(name, value, hours) {
+      const expires = new Date(Date.now() + hours * 60 * 60 * 1000).toUTCString();
+      document.cookie = `${name}=${value}; expires=${expires}; path=/`;
+    }
+
+    function getCookie(name) {
+      const value = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+      return value ? value.pop() : '';
+    }
+
+    function closeNoticeModal() {
+      const hideToday = document.getElementById('hideToday').checked;
+      if (hideToday) {
+        setCookie('hideNoticePopup', 'true', 24);
+      }
+      document.getElementById('noticeModal').style.display = 'none';
+    }
+
+    window.onload = function () {
+      if (getCookie('hideNoticePopup') !== 'true') {
+        document.getElementById('noticeModal').style.display = 'block';
+      }
+    };
+  </script>
+
+  <h1>🌌 우주력 캘린더</h1>
+  <div class="container">
+
+    <!-- 시계 영역 -->
+    <div class="clock">
+      <canvas id="clock" width="500" height="500"></canvas>
+      <div class="time-controls">
+        <div>
+          <label for="hour">시간: </label>
+          <input type="number" id="hour" min="0" max="23" value="20" />
+          <span>:</span>
+          <input type="number" id="minute" min="0" max="59" value="47" />
+        </div>
+        <div>
+          <label for="gmtSelect">GMT 설정: </label>
+          <select id="gmtSelect">
+            <option value="0">GMT+0</option>
+            <option value="9" selected>GMT+9 (KST)</option>
+            <option value="-5">GMT-5 (EST)</option>
+            <option value="1">GMT+1 (CET)</option>
+          </select>
+        </div>
+        <button type="button" onclick="setCurrentTime()">현재 시각</button>
+      </div>
+    </div>
+
+    <!-- 달력 영역 -->
+    <div class="calendar">
+      <div class="calendar-header">
+        <button id="prevMonth" aria-label="이전 달">◀</button>
+        <div>
+          <select id="yearSelect" aria-label="년 선택"></select>
+          <select id="monthSelect" aria-label="월 선택"></select>
+        </div>
+        <button id="nextMonth" aria-label="다음 달">▶</button>
+      </div>
+      <div class="calendar-grid" id="calendar">
+        <!-- 날짜 생성 -->
+      </div>
+      <div style="margin-top: 15px; display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+        <input type="text" id="reserveDate" readonly placeholder="선택된 날짜" />
+        <input type="text" id="reserveDayOfWeek" readonly placeholder="선택된 요일" />
+      </div>
+      <div class="person-selection">
+        <label for="personCount">인원수: </label>
+        <input type="number" id="personCountInput" min="1" value="1" />
+      </div>
+      <form id="planet" action="/reserve/planet" method="post">
+        <input type="hidden" name="personCount" id="personCount" />
+        <input type="hidden" name="reserveDate" id="hiddenReserveDate" />
+        <input type="hidden" name="reserveHour" id="reserveHour" />
+        <input type="hidden" name="reserveMinute" id="reserveMinute" />
+        <input type="hidden" name="reserveDayOfWeek" id="hiddenReserveDayOfWeek" />
+        <button type="submit">예약하기</button>
+      </form>
+    </div>
+  </div>
+</body>
+</html>

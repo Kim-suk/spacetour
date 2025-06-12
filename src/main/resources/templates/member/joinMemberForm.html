@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>회원가입</title>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDIcuJXidy_Hs_DGcrJdx8N2cPmTjAMMeg",
+      authDomain: "spacetravel-303a4.firebaseapp.com",
+      projectId: "spacetravel-303a4",
+      storageBucket: "spacetravel-303a4.appspot.com",
+      messagingSenderId: "747685483764",
+      appId: "1:747685483764:web:c836565537411f02bdbaa1",
+      measurementId: "G-XMJVSXMG0Q"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+  </script>
+  <!-- 외부 JS는 초기화 이후 로드 -->
+  <script src="/js/joinMemberForm.js"></script>   
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: 'Poppins', sans-serif;
+      overflow: auto;
+    }
+
+    .background-wrapper {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      z-index: -1;
+    }
+
+    .background-3d {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .form-wrapper {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.5);
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+      color: white;
+      width: 400px;
+      z-index: 10;
+    }
+
+    h2 {
+      color: gold;
+      text-align: center;
+    }
+
+    input, button, select {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+
+    input {
+      background-color: rgba(255,255,255,0.1);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    button {
+      background-color: gold;
+      color: black;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .login-link {
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    .login-link a {
+      color: gold;
+      text-decoration: none;
+    }
+
+    #recaptcha-container {
+      margin: 0 auto;
+      width: 100%;
+      height: 78px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- 3D 배경 -->
+<div class="background-wrapper">
+  <iframe class="background-3d" src="https://solarsystem.nasa.gov/gltf_embed/2366/"></iframe>
+</div>
+
+<!-- Firebase Recaptcha 영역 (폼 외부에 둠) -->
+<div id="recaptcha-container"></div>
+
+<!-- 회원가입 폼 -->
+<div class="form-wrapper">
+  <form name="frm" method="post" action="/member/joinMember">
+    <h2>Join Us</h2>
+
+    <input type="text" id="id" name="id" placeholder="User ID" required>
+    <button type="button" onclick="checkId()">Check ID(중복확인)</button>
+
+    <input type="password" id="pwd" name="pwd" placeholder="Password" required oninput="validateAndCheckPassword()">
+    <small id="pwdMsg"></small>
+
+    <input type="password" id="pwdCheck" name="pwdCheck" placeholder="Password Check" required oninput="validateAndCheckPassword()">
+    <small id="pwdCheckMsg"></small>
+
+    <input type="text" name="name" placeholder="UserName" required>
+    <input type="date" name="birth" placeholder="Birth Date" required>
+
+    <select name="gender" required>
+      <option value="">Select Gender</option>
+      <option value="male">Male</option>
+      <option value="female">Female</option>
+      <option value="other">Other</option>
+    </select>
+
+    <input type="text" id="phone" name="phone" placeholder="Phone Number" required>
+    <button type="button" onclick="sendPhoneCode()">인증번호 전송</button>
+
+    <input type="text" id="phoneCode" placeholder="인증번호 입력">
+    <button type="button" onclick="verifyPhoneCode()">확인</button>
+
+    <input type="hidden" id="phoneAuth" name="phoneAuth" value="N">
+    <small id="phoneMsg"></small>
+
+    <input type="email" name="email" placeholder="Email" required>
+    <input type="text" name="address" placeholder="Address" required>
+
+   <!-- 약관 동의 -->
+   <div style="margin-top: 10px; font-size: 0.9rem;">
+      <label>
+         <input type="checkbox" name="agree" required>
+         I agree to the <a href="/terms" style="color:gold;">terms and conditions</a>
+      </label>
+   </div>
+    <button type="button" onclick="fn_submit()">Sign Up</button>
+    <div class="login-link">
+      Already have an account? <a href="/member/loginForm">Login</a>
+    </div>
+
+  </form>
+</div>
+
+<script>
+  let recaptchaVerifier;
+  let confirmationResult;
+
+  // 즉시 실행
+  document.addEventListener('DOMContentLoaded', function () {
+    recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+      size: 'normal', // invisible 사용시 문제가 되므로 visible로 대체
+      callback: (response) => {
+        console.log('reCAPTCHA solved');
+      },
+      'expired-callback': () => {
+        console.warn('reCAPTCHA expired');
+      }
+    });
+
+    recaptchaVerifier.render().then((widgetId) => {
+      window.recaptchaWidgetId = widgetId;
+    });
+  });
+
+  function sendPhoneCode() {
+    const phoneNumber = document.getElementById('phone').value;
+    if (!phoneNumber) {
+      alert('전화번호를 입력하세요.');
+      return;
+    }
+
+    const formattedPhone = phoneNumber.startsWith('+') ? phoneNumber : '+82' + phoneNumber.replace(/^0/, '');
+
+    firebase.auth().signInWithPhoneNumber(formattedPhone, recaptchaVerifier)
+      .then((result) => {
+        confirmationResult = result;
+        alert('인증번호가 전송되었습니다.');
+        document.getElementById('phoneAuth').value = 'N';
+      })
+      .catch((error) => {
+      console.error("SMS Error:", error);
+        alert('인증번호 전송 실패: ' + error.message);
+      });
+  }
+
+  function verifyPhoneCode() {
+    const code = document.getElementById('phoneCode').value;
+    if (!code) {
+      alert('인증번호를 입력하세요.');
+      return;
+    }
+
+    confirmationResult.confirm(code)
+      .then((result) => {
+        alert('전화번호 인증 성공!');
+        document.getElementById('phoneAuth').value = 'Y';
+      })
+      .catch((error) => {
+        alert('인증번호 오류: ' + error.message);
+        document.getElementById('phoneAuth').value = 'N';
+      });
+  }
+
+  function fn_submit() {
+    if (document.getElementById('phoneAuth').value !== 'Y') {
+      alert('전화번호 인증을 완료해주세요.');
+      return false;
+    }
+    document.frm.submit();
+  }
+</script>
+</body>
+</html>

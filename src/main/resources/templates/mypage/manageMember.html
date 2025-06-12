@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>회원 관리</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 30px;
+            background-color: #fefefe;
+            border-radius: 12px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .manage-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;	
+        }
+        .manage-form button {
+            width: 100%;
+            padding: 20px;
+            background-color: #f0f8ff;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .manage-form button:hover {
+            background-color: #cce6ff;
+        }
+        .danger-button {
+            background-color: #ffe6e6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>회원 정보 관리</h2>
+        <div class="manage-buttons">
+
+            <form action="/mypage/updateForm" method="get" class="manage-form">
+                <button type="submit">프로필 이미지 / 개인정보 수정</button>
+            </form>
+
+            <form action="/mypage/changePassword" method="get" class="manage-form">
+                <button type="submit">비밀번호 변경</button>
+            </form>
+
+            <form action="/reserve/history" method="post" class="manage-form">
+                <button type="submit">구매 내역 조회</button>
+            </form>
+
+            <form action="/reserve/reserveList" method="post" class="manage-form">
+                <button type="submit">예약 내역 조회</button>
+            </form>
+
+            <form action="/mypage/chatList" method="post" class="manage-form">
+                <button type="submit">채팅 관리</button>
+            </form>
+
+            <form action="/member/deleteAccount" method="post" class="manage-form" onsubmit="return confirm('정말로 탈퇴하시겠습니까?');">
+                <button type="submit" class="danger-button">회원 탈퇴</button>
+            </form>
+
+        </div>
+    </div>
+</body>
+</html>

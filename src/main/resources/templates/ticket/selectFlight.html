@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>항공편 선택</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0b0f29, #12192e);
+      color: #0ff;
+      font-family: 'Orbitron', sans-serif;
+      padding: 30px;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 3rem;
+      text-shadow: 0 0 10px #0ff;
+    }
+
+    .info-section {
+      background: rgba(0, 20, 60, 0.8);
+      padding: 20px;
+      margin-bottom: 30px;
+      border-radius: 12px;
+      border: 1px solid #0ff;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .flight-section {
+      margin-top: 40px;
+      max-width: 1000px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .flight-title {
+      font-size: 1.8rem;
+      margin-bottom: 10px;
+      color: #0ff;
+      text-shadow: 0 0 6px #00ffff;
+    }
+
+    .flight-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 30px;
+      background: rgba(0, 20, 60, 0.85);
+      border-radius: 12px;
+      overflow: hidden;
+      border: 2px solid #0ff;
+    }
+
+    .flight-table th, .flight-table td {
+      padding: 12px;
+      text-align: center;
+      border: 1px solid #0ff;
+    }
+
+    .flight-table th {
+      background-color: #0ff;
+      color: #000;
+    }
+
+    .seat-cell {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .seat-status {
+      padding: 5px 10px;
+      border-radius: 8px;
+      font-weight: bold;
+      color: #000;
+    }
+
+    .seat-status.available {
+      background-color: #0ff;
+    }
+
+    .seat-status.soldout {
+      background-color: #ff4d4d;
+    }
+
+    .seat-status.inactive {
+      background-color: #999;
+      color: #222;
+    }
+
+    button {
+      background-color: #0ff;
+      color: #000;
+      border: none;
+      padding: 6px 12px;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover:not([disabled]) {
+      background-color: #00ccff;
+    }
+
+    button[disabled] {
+      background-color: #444;
+      color: #888;
+      cursor: not-allowed;
+    }
+
+    @media (max-width: 768px) {
+      h1 { font-size: 2rem; }
+      .flight-title { font-size: 1.5rem; }
+      button { font-size: 0.9rem; padding: 5px 10px; }
+    }
+  </style>
+</head>
+<body>
+
+
+
+	<h1>항공편 선택</h1>
+
+	<div class="info-section">
+	  <p>출발지: <span th:text="${request.departure}">출발지</span></p>
+	  <p>도착지: <span th:text="${request.destination}">도착지</span></p>
+	  <p>출발일: <span th:text="${request.departureDate}">2025-06-03</span></p>
+	  <div th:if="${request.tripType.name() == 'ROUNDTRIP'}">
+	    <p>복귀일: <span th:text="${request.returnDate}">2025-06-10</span></p>
+	  </div>
+	</div>
+
+	<!-- 좌석 선택용 폼 : 모든 라디오 버튼 포함 -->
+	<form method="post" th:action="@{/ticket/selectSeat}" id="seatSelectionForm">
+		<!-- 출발편 선택용 hidden inputs -->
+		  <input type="hidden" name="departureScheduleId" id="departureScheduleId" />
+		  <input type="hidden" name="departureSeatGrade" id="departureSeatGrade" />
+
+		  <!-- 복귀편 선택용 hidden inputs (왕복일 경우만) -->
+		  <input type="hidden" name="returnScheduleId" id="returnScheduleId" />
+		  <input type="hidden" name="returnSeatGrade" id="returnSeatGrade" />
+		  
+	  <!-- 출발편 -->
+	  <div class="flight-section">
+	    <div class="flight-title">출발편 선택</div>
+	    <table class="flight-table">
+	      <thead>
+	        <tr>
+	          <th>출발 / 도착 시간</th>
+	          <th>우주비행선</th>
+	          <th th:each="grade : ${seatGrades}" th:text="${grade}">좌석등급</th>
+	        </tr>
+	      </thead>
+	      <tbody>
+	        <tr th:if="${flightList.isEmpty()}">
+	          <td colspan="${2 + seatGrades.size()}">항공편이 없습니다.</td>
+	        </tr>
+
+	        <tr th:each="flight : ${flightList}">
+	          <td>
+	            <span th:text="|${#temporals.format(flight.departureTime, 'yyyy-MM-dd')} ~ ${#temporals.format(flight.arrivalTime, 'yyyy-MM-dd')}|"></span><br>
+	            <span th:text="|${#temporals.format(flight.departureTime, 'HH:mm')} → ${#temporals.format(flight.arrivalTime, 'HH:mm')}|"></span><br>
+	            <span th:text="|총 ${flight.duration}|"></span>
+	          </td>
+	          <td th:text="${flight.spaceshipName}"></td>
+
+	          <td th:each="grade : ${seatGrades}">
+	            <div th:each="seat : ${flight.seatInfoList}" th:if="${seat.seatGrade == grade}">
+	              <span th:text="${'KRW ' + #numbers.formatDecimal(seat.price, 0, 'COMMA', 0, 'POINT')}"></span><br>
+	              <div th:text="${seat.remainingSeats + '/' + seat.totalSeats + '석'}"></div>
+	              <div th:class="${!seat.operated ? 'inactive' : (seat.remainingSeats <= 0 ? 'soldout' : 'available')}"
+	                   th:text="${!seat.operated ? '미운영' : (seat.remainingSeats <= 0 ? '매진' : '예약')}"></div>
+
+	              <div th:if="${seat.operated} and ${seat.remainingSeats > 0}" class="seat-select-label">
+	                <label>
+	                  <input type="radio" 
+	                         name="departureSeat" 
+	                         th:value="${flight.scheduleId + '_' + seat.seatGrade.name()}" 
+	                         class="seat-select-radio"
+							 th:attr="data-grade=${seat.seatGrade.name()}"
+	                         data-is-return="false" />
+	                  좌석 선택
+	                </label>
+	              </div>
+
+	            </div>
+	          </td>
+	        </tr>
+	      </tbody>
+	    </table>
+	  </div>
+
+	  <!-- 복귀편 (왕복일 경우만 표시) -->
+	  <div class="flight-section" th:if="${request.tripType.name() == 'ROUNDTRIP'}">
+	    <div class="flight-title">복귀편 선택</div>
+	    <table class="flight-table">
+	      <thead>
+	        <tr>
+	          <th>출발 / 도착 시간</th>
+	          <th>우주비행선</th>
+	          <th th:each="grade : ${seatGrades}" th:text="${grade}">좌석등급</th>
+	        </tr>
+	      </thead>
+	      <tbody>
+	        <tr th:if="${returnFlightList.isEmpty()}">
+	          <td colspan="${2 + seatGrades.size()}">복귀편 항공편이 없습니다.</td>
+	        </tr>
+
+	        <tr th:each="flight : ${returnFlightList}">
+	          <td>
+	            <span th:text="|${#temporals.format(flight.departureTime, 'yyyy-MM-dd')} ~ ${#temporals.format(flight.arrivalTime, 'yyyy-MM-dd')}|"></span><br>
+	            <span th:text="|${#temporals.format(flight.departureTime, 'HH:mm')} → ${#temporals.format(flight.arrivalTime, 'HH:mm')}|"></span><br>
+	            <span th:text="|총 ${flight.duration}|"></span>
+	          </td>
+	          <td th:text="${flight.spaceshipName}"></td>
+
+	          <td th:each="grade : ${seatGrades}">
+	            <div th:each="seat : ${flight.seatInfoList}" th:if="${seat.seatGrade == grade}">
+	              <span th:text="${'KRW ' + #numbers.formatDecimal(seat.price, 0, 'COMMA', 0, 'POINT')}"></span><br>
+	              <div th:text="${seat.remainingSeats + '/' + seat.totalSeats + '석'}"></div>
+	              <div th:class="${!seat.operated ? 'inactive' : (seat.remainingSeats <= 0 ? 'soldout' : 'available')}"
+	                   th:text="${!seat.operated ? '미운영' : (seat.remainingSeats <= 0 ? '매진' : '예약')}"></div>
+
+	              <div th:if="${seat.operated} and ${seat.remainingSeats > 0}" class="seat-select-label">
+	                <label>
+	                  <input type="radio" 
+	                         name="returnSeat" 
+	                         th:value="${flight.scheduleId + '_' + seat.seatGrade.name()}" 
+	                         class="seat-select-radio"
+							 th:attr="data-grade=${seat.seatGrade.name()}"
+	                         data-is-return="true" />
+	                  좌석 선택
+	                </label>
+	              </div>
+
+	            </div>
+	          </td>
+	        </tr>
+	      </tbody>
+	    </table>
+	  </div>
+
+	  <!-- 최종 제출 버튼 (하나만) -->
+	  <button type="submit" id="submitBtn" disabled>좌석 선택</button>
+
+	</form>
+
+	<script th:inline="javascript">
+	  const radios = document.querySelectorAll('.seat-select-radio');
+	  const submitBtn = document.getElementById('submitBtn');
+
+	  const isRoundTrip = /*[[${request.tripType.name() == 'ROUNDTRIP'}]]*/ false;
+
+	  let selectedDeparture = null;
+	  let selectedReturn = null;
+
+	  function updateSubmitButton() {
+	    if (isRoundTrip) {
+	      submitBtn.disabled = !(selectedDeparture && selectedReturn);
+	    } else {
+	      submitBtn.disabled = !selectedDeparture;
+	    }
+	  }
+
+	  // hidden input elements
+	  const depScheduleInput = document.getElementById('departureScheduleId');
+	  const depGradeInput = document.getElementById('departureSeatGrade');
+	  const retScheduleInput = document.getElementById('returnScheduleId');
+	  const retGradeInput = document.getElementById('returnSeatGrade');
+
+	  radios.forEach(radio => {
+	    radio.addEventListener('change', () => {
+	      // 값 예: "123_ECONOMY" or "456_FIRST"
+	      const val = radio.value;
+	      // _ 구분자로 쪼개기 (ex: [scheduleId, seatGrade])
+	      const parts = val.split('_');
+
+	      // scheduleId는 첫 번째
+	      const scheduleId = parts[0];
+	      // seatGrade는 마지막 부분 (마지막 문자열)
+	      const seatGrade = parts[parts.length - 1];
+
+	      if (radio.dataset.isReturn === 'true') {
+	        selectedReturn = val;
+	        retScheduleInput.value = scheduleId;
+	        retGradeInput.value = seatGrade;
+	      } else {
+	        selectedDeparture = val;
+	        depScheduleInput.value = scheduleId;
+	        depGradeInput.value = seatGrade;
+	      }
+	      updateSubmitButton();
+	    });
+	  });
+	</script>
+
+	</body>
+	</html>

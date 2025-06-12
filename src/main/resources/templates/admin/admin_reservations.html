@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>관리자 예약 관리</title>
+    <style>
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+        button { padding: 5px 10px; cursor: pointer; }
+        button.cancelled { background-color: #aaa; cursor: not-allowed; }
+    </style>
+</head>
+<body>
+<h1>예약 목록 (관리자)</h1>
+
+<table id="reservationTable">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>예약 날짜</th>
+        <th>시간</th>
+        <th>플래닛</th>
+        <th>좌석</th>
+        <th>인원</th>
+        <th>로그인 ID</th>
+        <th>상태</th>
+        <th>가격</th>
+        <th>예약 취소</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- 예약 데이터가 여기에 동적으로 채워집니다 -->
+    </tbody>
+</table>
+
+<script>
+    async function fetchReservations() {
+        try {
+            const res = await fetch('/admin/reservations');
+            if (!res.ok) throw new Error('예약 목록을 가져오는 데 실패했습니다.');
+
+            const reservations = await res.json();
+            const tbody = document.querySelector('#reservationTable tbody');
+            tbody.innerHTML = ''; // 기존 데이터 삭제
+
+            reservations.forEach(r => {
+                const tr = document.createElement('tr');
+
+                tr.innerHTML = `
+                    <td>${r.id}</td>
+                    <td>${r.reserveDate} (${r.reserveDayOfWeek})</td>
+                    <td>${r.reserveHour}시 ${r.reserveMinute}분</td>
+                    <td>${r.planet}</td>
+                    <td>${r.selectedSeats}</td>
+                    <td>${r.personCount}</td>
+                    <td>${r.loginId}</td>
+                    <td>${r.status}</td>
+                    <td>${r.price}</td>
+                    <td>
+                        ${r.status === 'CANCELLED'
+                            ? `<button class="cancelled" disabled>취소됨</button>`
+                            : `<button onclick="cancelReservation(${r.id})">취소하기</button>`
+                        }
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        } catch (error) {
+            alert(error.message);
+        }
+    }
+
+    async function cancelReservation(id) {
+        if (!confirm('정말로 예약을 취소하시겠습니까?')) return;
+
+        try {
+            const res = await fetch('/admin/reservations/cancel', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ id })
+            });
+
+            if (!res.ok) {
+                const text = await res.text();
+                throw new Error(text || '예약 취소 실패');
+            }
+
+            alert('예약이 취소되었습니다.');
+            fetchReservations(); // 리스트 새로고침
+        } catch (error) {
+            alert(error.message);
+        }
+    }
+
+    // 페이지 로드 시 예약 목록 호출
+    window.onload = fetchReservations;
+</script>
+</body>
+</html>

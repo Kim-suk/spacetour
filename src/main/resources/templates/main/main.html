@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<meta http-equiv="imagetoolbar" content="no">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet" />
+<title>Space Tour</title>
+<link rel="stylesheet" href="/css/default.css">
+<link rel="stylesheet" href="/css/top_menu.css">
+<link rel="stylesheet" href="/css/swiper.min.css">
+<link rel="stylesheet" href="/css/aos.css">
+<link rel="stylesheet" href="/css/main_banner.css">
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css?ver=171222">
+<link rel="stylesheet" href="/css/user.css">
+<link rel="stylesheet" href="/css/font.css">
+
+
+<script src="/js/top_menu.js"></script>
+<script src="/js/swiper.js"></script>
+<script src="/js/aos.js"></script>
+<script src="/js/ScrollTrigger.js"></script>
+<script src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+</head>
+<body >
+<style>
+  /* Reset 및 기본 스타일 */
+  body, html {
+    margin: 0; padding: 0; height: 100%;
+    color: #fff;
+    background: #000;
+	font-family: 'Orbitron', sans-serif;
+  }
+  
+  .menu-item .bar {
+  	  display: block;
+  	  width: 100%;
+  	  height: 2px;
+  	  background: white;
+  	  margin-top: 5px;
+  	  transition: background 0.3s;
+  	}
+  	.menu-item:hover .bar {
+  	  background: #00ffff;
+  	}
+  	/* 슬라이드 인 애니메이션 */
+  	@keyframes slideIn {
+  	  0% {
+  	    opacity: 0;
+  	    transform: translateY(30px);
+  	    filter: blur(4px);
+  	  }
+  	  100% {
+  	    opacity: 1;
+  	    transform: translateY(0);
+  	    filter: blur(0);
+  	  }
+  	}
+
+	@media (max-width: 768px) {
+	  h1 { font-size: 4rem; }
+	  .progress li { font-size: 1rem; }
+	}
+  /* 비디오를 화면 가득 채우기 */
+  #video-bg {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    z-index: -1;
+  }
+  
+  /* section 영역들 */
+  main {
+    position: relative;
+    z-index: 1;
+  }
+  section {
+    min-height: 100vh;
+    padding: 60px 20px;
+    background: rgba(0, 0, 0, 0.6);
+    border-bottom: 1px solid #222;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+  }
+
+  /* footer */
+  footer {
+    background: #111;
+    text-align: center;
+    padding: 20px;
+    font-size: 1rem;
+    color: #aaa;
+  }
+
+    @keyframes slideInUp {
+      0% {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+	@keyframes fadeIn {
+	  from {
+	    opacity: 0;
+	  }
+	  to {
+	    opacity: 1;
+	  }
+	}
+</style>
+
+	<!-- 전체 화면 비디오 -->
+	<video id="backgroundVideo" autoplay muted loop playsinline
+	       style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0;">
+	  <source src="/image/exploration.mp4" type="video/mp4">
+	  브라우저가 비디오 태그를 지원하지 않습니다.
+	</video>
+
+	<script>
+	  const video = document.getElementById('backgroundVideo');
+
+	  window.addEventListener('scroll', () => {
+	    const blur = Math.min(window.scrollY / 100, 5); // blur는 최대 5px
+	    const opacity = Math.max(1 - window.scrollY / 1000, 0.3); // opacity는 최소 0.3
+
+	    video.style.filter = `blur(${blur}px) opacity(${opacity})`;
+	  });
+	</script>
+
+	<div id="top_nav_wrap"  data-aos="fade-down">
+	    <div class="right">
+			    <ul id="top_nav">
+			        <!-- 로그인 여부에 따른 li들 -->
+			        <li class="list01" th:if="${loginId == null}" style="color:#fff">
+			            <a th:href="@{/member/loginForm}" class="login-button">로그인</a>
+			        </li>
+			        <li class="list02" th:if="${loginId == null}">
+			            <a th:href="@{/member/joinMemberForm}" class="join-button">회원가입</a>
+			        </li>
+			        <li class="list03" th:unless="${loginId == null}" style="color:#fff; display:flex; gap:10px; align-items:center;">
+			            <a th:href="@{/member/detailMember(id=${loginId})}" th:text="${loginId}" class="profile-button"></a>
+			            <a th:href="@{/member/logout}" class="logout-button">로그아웃</a>
+			            <a th:href="@{/mypage/myPage}" class="button">My Page</a>
+
+						<div style="display: flex; justify-content: flex-end; align-items: center;">
+						  <video id="earth2Video" autoplay muted loop playsinline
+						         style="
+						           width: 80px;
+						           height: 80px;
+						           border-radius: 50%;
+						           cursor: pointer;
+						         "
+						         onclick="location.href='/space/cesium'">
+						    <source src="/image/earth2.webm" type="video/webm">
+						  </video>
+						</div>
+
+			        </li>
+			    </ul>
+			</div>
+</div>
+  	<div class="cont" style="position: relative; z-index: 10; text-align: center; color: white; padding-top: 20vh; height: 100vh; display: flex; flex-direction: column; justify-content: flex-start;">
+  	  <div class="txt" style="flex-grow: 1;">
+		<h1 style="font-size: 10rem; margin-top: 30px; font-weight: 600;">SPACE TOUR</h1>
+
+
+  	  </div>
+	  <script>
+	    $(document).ready(function() {
+	      const $title = $('h1');
+	      const text = $title.text();
+	      const animatedHTML = text
+	        .split('')
+	        .map((char, i) => `<span style="display: inline-block; opacity: 0; transform: translateY(30px); animation: slideInUp 0.6s ease ${i * 0.1}s forwards;">${char}</span>`)
+	        .join('');
+	      $title.html(animatedHTML);
+	    });
+	  </script>
+
+  	  <!-- 버튼 메뉴 -->
+  	  <ul class="progress">
+  	    <li>
+  	      <a href="/ticket/selectSchedule" class="menu-item" style="color: white; text-decoration: none; cursor: pointer;">
+  	        <p>예약 하기</p>
+  	        <span class="bar"></span>
+  	      </a>
+  	    </li>
+  	    <li>
+  	      <a href="/chat/chat" class="menu-item" style="color: white; text-decoration: none; cursor: pointer;">
+  	        <p>동승자 매칭</p>
+  	        <span class="bar"></span>
+  	      </a>
+  	    </li>
+  	    <li>
+  	      <a href="/weather/weather" class="menu-item" style="color: white; text-decoration: none; cursor: pointer;">
+  	        <p>지구 기후 상황</p>
+  	        <span class="bar"></span>
+  	      </a>
+  	    </li>
+  	    <li>
+  	      <a href="/space/star" class="menu-item" style="color: white; text-decoration: none; cursor: pointer;">
+  	        <p>GIBS</p>
+  	        <span class="bar"></span>
+  	      </a>
+  	    </li>
+		
+  	  </ul>
+  	</div>
+  <main>
+	
+	<!-- Section 1: 달 배경 + 지구 비디오 -->
+	<section style="position: relative; overflow: hidden; margin: 0; padding: 0;">
+	  <!-- 달 이미지 -->
+	  <img src="/image/vision-moon-surface.webp" alt="달 표면 이미지" style="width: 120%; height: auto;" />
+
+	  <!-- 지구 비디오 -->
+	  <video id="earthVideo" autoplay muted loop playsinline
+	         style="
+	           position: absolute;
+	           top: 30%;
+	           left: 50%;
+	           transform: translate(-50%, -50%) scale(1);
+	           width: 200px;
+	           height: auto;
+	           z-index: 2;
+	           border-radius: 50%;
+	           transition: transform 0.1s ease-out;
+	         ">
+			 
+	    <source src="/image/earth.webm" type="video/webm">
+	  </video>
+
+	  <!-- 페이드인 텍스트 -->
+	  <div style="
+	    position: absolute;
+	    top: 30%;
+	    left: 50%;
+	    transform: translateX(-50%);
+	    text-align: center;
+	    z-index: 3;
+	    color: white;
+	    font-family: 'Arial', sans-serif;
+	    animation: fadeIn 8s ease-in-out forwards;
+		animation-delay: 2s; /* 지구 확대 후 실행 */
+	    opacity: 0;
+	    white-space: nowrap; /* 줄바꿈 방지 */
+
+	  ">
+	    <b style="font-size: 5rem;font-weight: 600; ">Explore The Sustainable Future In Space</b>
+	  </div>
+	</section>
+
+	<!-- Section 2: 사람 비디오 -->
+	<section style="position: relative; height: 100vh; margin: 0; padding: 0;">
+	  <video autoplay muted loop playsinline
+	         style="
+	           position: absolute;
+	           left: 50%;
+	           top: 55%;
+	           transform: translate(-50%, -50%);
+	           width: 100%;
+	           height: auto;
+	           min-height: 120vh;
+	           object-fit: cover;
+	         ">
+	    <source src="/image/human.mp4" type="video/mp4">
+	    브라우저가 비디오 태그를 지원하지 않습니다.
+	  </video>
+	</section>
+
+	<!-- 공백 제거: 여기에 불필요한 줄바꿈이나 마진 없음 -->
+
+	<footer id="ft" style="margin: 0; padding: 0;">
+	  <div class="top_cont">
+	    <div class="add">
+	      서울특별시 종로구 돈화문로 26 단성사빌딩 4층 405호 <br/>
+	      통신판매업종신고 : 제2025-서울특별시-12120718호 ㅣ 상호 : 수평선 ㅣ 대표 : 김수경 & 양평근<br />
+	      고객센터 : 1234-5678ㅣ 이메일 : sukyung01212@gmail.com | ykp07097@gmail.com
+	    </div>
+	  </div>
+	</footer>
+
+	</div>
+	<script>
+	    window.addEventListener('scroll', function () {
+	      const scrollY = window.scrollY;
+	      const exploration = document.getElementById("backgroundVideo");
+	      const earth = document.getElementById("earthVideo");
+
+	      // 0~800px 스크롤 시 exploration 비디오 확대 + 투명화
+	      const fadeStart = 0;
+	      const fadeEnd = 800;
+
+	      let progress = (scrollY - fadeStart) / (fadeEnd - fadeStart);
+	      progress = Math.max(0, Math.min(progress, 1)); // 0~1 사이
+
+	      // exploration 효과: 확대 + 투명도
+	      const scale = 1 + progress * 1.5; // 최대 2.5배 확대
+	      const opacity = 1 - progress;
+	      exploration.style.transform = `scale(${scale})`;
+	      exploration.style.opacity = opacity;
+
+	      // earth 효과: 점점 커지고 보이기
+	      if (progress >= 0.5) {
+	        const earthProgress = (progress - 0.5) * 2; // 0~1 범위
+	        earth.style.transform = `translate(-50%, -50%) scale(${0.5 + earthProgress * 1.5})`;
+	        earth.style.opacity = earthProgress;
+	      } else {
+	        earth.style.opacity = 0;
+	      }
+	    });
+	
+	  window.addEventListener("scroll", function () {
+	    const video = document.getElementById("earthVideo");
+	    const scrollY = window.scrollY;
+	    const maxScale = 3; // 최대 커지는 비율
+	    const startScroll = 0; // 시작 스크롤 위치
+	    const endScroll = 1000; // 어느 정도 스크롤까지 커질지
+
+	    // 스크롤 비율 계산 (0 ~ 1)
+	    const scrollProgress = Math.min(Math.max((scrollY - startScroll) / (endScroll - startScroll), 0), 1);
+	    const scale = 1 + (maxScale - 1) * scrollProgress;
+
+	    video.style.transform = `translate(-50%, -50%) scale(${scale})`;
+	  });
+	</script>
+
+	<script>
+	  AOS.init({
+	    duration: 1200,
+	    once: true
+	  });
+	</script>
+
+	</body>
+	</html>
