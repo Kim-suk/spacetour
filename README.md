@@ -18,15 +18,15 @@ Space Travel Web은 누구나 우주 여행을 꿈꿀 수 있도록 기획된 �
 이는 기존 여행 예약 플랫폼과의 차별화된 기능으로, 소셜성과 사용자 경험을 동시에 강화합니다.
 
 🌃 1. GIBS 기반 야간 도시 조명 및 ISS 실시간 위치 추적
-좌측 화면에는 **NASA의 GIBS(Global Imagery Browse Services)**를 연동하여, 날짜별 지구 야간의 도시 불빛을 시각화합니다.
-우측 화면에는 NSYO API를 통해 실시간 **국제우주정거장(ISS)**의 위치(예: 위도: 39.18, 경도: -54.27)를 확인할 수 있으며,
+좌측 화면에는 **NASA의 GIBS**(Global Imagery Browse Services)를 연동하여, 날짜별 지구 야간의 도시 불빛을 시각화합니다.
+우측 화면에는 **NSYO API**를 통해 실시간 **국제우주정거장(ISS)**의 위치(예: 위도: 39.18, 경도: -54.27)를 확인할 수 있으며,
 ISS의 실시간 움직임을 지도로 추적할 수 있어 우주를 실제로 관찰하는 듯한 체험을 제공합니다.
 
 🌦️ 2. 지구 기후 상황 시각화 및 실시간 날씨 정보
 사용자가 나라 이름을 입력하면 자동완성 검색 기능을 통해 해당 국가를 추천하며, 클릭 시 3D 지구본 상에 마커가 표시됩니다.
 선택한 위치의 **실시간 기후 정보(날씨, 온도, 풍속 등)**를 확인할 수 있어,
 여행 또는 우주 관측 시점에서의 기후 조건 시뮬레이션이 가능합니다.
-또한 사용자는 3D 지구본을 자유롭게 회전 및 확대/축소하여 전 세계를 탐색하며, 관심 국가의 날씨를 실시간으로 조회할 수 있습니다.
+또한 사용자는 **3D 지구본**을 자유롭게 회전 및 확대/축소하여 전 세계를 탐색하며, 관심 **국가의 날씨를 실시간으로 조회**할 수 있습니다.
 
 🌍 Cesium 기반 3D 지구본 인터랙션
 상단에 배치된 회전하는 3D 지구본은 단순한 장식이 아닌, 클릭 시 Cesium ion과 연동되어 CesiumJS와 satellite.js 라이브러리를 활용하여 국제우주정거장(ISS)의 실시간 위치와 궤도를 3D 지구 위에 시각화하는 웹 애플리케이션입니다.
@@ -56,9 +56,17 @@ CesiumJS는 고성능 3D 지구 및 지도 렌더링 라이브러리이며, sate
 <details>
 <summary>✅ 로그인 (Login)</summary>
 + 아이디 저장
+  아이디를 입력 후 나갔다 들어와도 저장이 되어있어서 다시 입력하지 않아도 된다.
+  ![id_save](https://github.com/user-attachments/assets/808bda32-4bbd-4a8c-adfa-06baa9a2a34c)
 + 비밀번호 암호화로 db에 저장
+  ![image](https://github.com/user-attachments/assets/d1344818-abd4-4175-acfb-ba31e5d93d6f)
+
 + 아이디 찾기(javamail, google stomp사용)
-+ 정보 일치 불일치 판졀 -> 보안코드 입력력
++ 정보 일치 불일치 판별 -> 보안코드 입력
+아이디 또는 비밀번호를 5회이상 틀릴시 보안코드입력창으로 자동 전환
+ ![image](https://github.com/user-attachments/assets/c3615e76-8ce9-416f-bc24-6fb980a6818f)
+![security](https://github.com/user-attachments/assets/919cf8c3-7417-456b-bb67-6a84f8e9c04d)
+
 </details>
 
 <hr style="border: 3px solid #000;">
