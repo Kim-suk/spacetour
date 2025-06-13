@@ -57,6 +57,7 @@ CesiumJS는 고성능 3D 지구 및 지도 렌더링 라이브러리이며, sate
 <summary>✅ 로그인 (Login)</summary>
   
 + 아이디 저장
+---
 ![id_save](https://github.com/user-attachments/assets/be34a541-e7ea-40bb-a40d-964cf39a6288)
 
    아이디를 입력 후 나갔다 들어와도 저장이 되어있어서 다시 입력하지 않아도 된다.
@@ -64,14 +65,23 @@ CesiumJS는 고성능 3D 지구 및 지도 렌더링 라이브러리이며, sate
   ![image](https://github.com/user-attachments/assets/d1344818-abd4-4175-acfb-ba31e5d93d6f)
 
 + 아이디 찾기(javamail, google stomp사용)
-  
+  ![image](https://github.com/user-attachments/assets/d0a81648-9c14-4eb9-a829-2ad49afe6cc3)
+
+![email](https://github.com/user-attachments/assets/5fd025e3-3cda-4609-809d-fe055e7391c5)
+![image](https://github.com/user-attachments/assets/f4f876b8-c92f-4e8a-97e0-1e2e267c2377)
+![image](https://github.com/user-attachments/assets/16be4846-c74b-47c4-8b0a-408dd36b6e96)
+
 + 정보 일치 불일치 판별 -> 보안코드 입력
 
 아이디 또는 비밀번호를 5회이상 틀릴시 보안코드입력창으로 자동 전환
+
 ![image](https://github.com/user-attachments/assets/c3615e76-8ce9-416f-bc24-6fb980a6818f)
 
 ![image](https://github.com/user-attachments/assets/90ec5174-3a73-4f49-95de-442f215130de)
-![image](https://github.com/user-attachments/assets/9b3145e4-aafd-4e4c-837f-dbda3e176b89)
+![image](https://github.com/user-attachments/assets/9b3145e4-aafd-4e4c-837f-dbda3e176b89
+
+보안코드 올바르게 입력시 다시 로그인 화면으로 자동 전환
+--
 ![image](https://github.com/user-attachments/assets/aa2c42a2-4e7b-47c6-a403-4646c1d43238)
 
 
