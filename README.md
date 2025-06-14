@@ -78,13 +78,16 @@ CesiumJS는 고성능 3D 지구 및 지도 렌더링 라이브러리이며, sate
 ![image](https://github.com/user-attachments/assets/c3615e76-8ce9-416f-bc24-6fb980a6818f)
 
 ![image](https://github.com/user-attachments/assets/90ec5174-3a73-4f49-95de-442f215130de)
-![image](https://github.com/user-attachments/assets/9b3145e4-aafd-4e4c-837f-dbda3e176b89
+
+![스크린샷 2025-06-13 195827](https://github.com/user-attachments/assets/7766917c-6f5e-457b-a404-7ad7d975c460)
+
 
 보안코드 올바르게 입력시 다시 로그인 화면으로 자동 전환
---
+
 ![image](https://github.com/user-attachments/assets/aa2c42a2-4e7b-47c6-a403-4646c1d43238)
 
-
++ 비밀번호 찾기(javamail,Google STOMP)
+아이디와 이메일을 입력하면 해당하는 이메일로 임시비밀번호를 발급해 줍니다.
 </details>
 
 <hr style="border: 3px solid #000;">
