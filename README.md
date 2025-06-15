@@ -173,6 +173,7 @@ CesiumJS는 고성능 3D 지구 및 지도 렌더링 라이브러리이며, sate
 + 오른쪽 화면 : ISS (우주 정거장) 실시간으로 우주 정거장의 위치를 보여줌
 ![image](https://github.com/user-attachments/assets/e88bd039-3a1d-4df4-9267-5b865770deb3)
 
+![gibs](https://github.com/user-attachments/assets/ef2f1d1f-0b23-4c77-9834-4848ecbdea09)
 
 </details>
 <hr style="border: 3px solid #000;">
