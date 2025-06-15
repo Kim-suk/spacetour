@@ -129,13 +129,7 @@ CesiumJS는 고성능 3D 지구 및 지도 렌더링 라이브러리이며, sate
 <details>
 <summary>✅ 예약하기(ticket) </summary>
 
-+ 현재 위치 기반으로 반경 1km에 있는 동물병원 위치 확인 가능
 
-![image](https://github.com/user-attachments/assets/81039edf-e25c-475c-9c22-65d1443570b1)
-
-+ 마킹 되어있는 동물병원 클릭 시 상세 정보 확인 가능
-
-![image](https://github.com/user-attachments/assets/042a80ef-4af7-45ee-bd05-93d09adf6595)
 
 </details>
 
@@ -163,12 +157,10 @@ CesiumJS는 고성능 3D 지구 및 지도 렌더링 라이브러리이며, sate
 <summary>✅ 지구 기후 상황</summary>
 
 + 원하는 나라를 3D지구본에서 선택하면 해당하는 나라의 날씨를 실시간으로가져옴( weather API)
+자동 완성 검색 기능(날씨가 궁금한 나라의 이름을 자동완성 기능으로 찾으면 3D지구본이 자동으로 해당하는 나라의 국기로 마커를 찍어주고 그 나라도 실시간으로 날씨를 보여줌)
+![image](https://github.com/user-attachments/assets/6c32a2a2-2fe5-47af-a316-a66ad6ebe6f8)
 
-![결제 성공](https://github.com/user-attachments/assets/7a0f5066-5d21-47c6-8a16-f39774a4fbfc)
 
-+ 자동 완성 검색 기능(날씨가 궁금한 나라의 이름을 자동완성 기능으로 찾으면 3D지구본이 자동으로 해당하는 나라에 마커를 찍어주고 그 나라도 실시간으로 날씨를 보여줌)
-
-![결제 성공](https://github.com/user-attachments/assets/7a0f5066-5d21-47c6-8a16-f39774a4fbfc)
 
 </details>
 <hr style="border: 3px solid #000;">
@@ -179,14 +171,16 @@ CesiumJS는 고성능 3D 지구 및 지도 렌더링 라이브러리이며, sate
 + NASA API, N2YO API 사용
 + 왼쪽 화면 : NASA GIBS 로 야간 도시 불빛을 날짜 별로 볼 수 있음
 + 오른쪽 화면 : ISS (우주 정거장) 실시간으로 우주 정거장의 위치를 보여줌
+![image](https://github.com/user-attachments/assets/e88bd039-3a1d-4df4-9267-5b865770deb3)
+
 
 </details>
 <hr style="border: 3px solid #000;">
 
 <details>
 <summary>✅ Cesium Ion </summary>
-
 + Ceseium API 사용 -> 위성 실시간 위치 갱신
+
 
 </details>
 <hr style="border: 3px solid #000;">
