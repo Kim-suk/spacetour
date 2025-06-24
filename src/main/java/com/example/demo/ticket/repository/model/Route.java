@@ -7,9 +7,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import lombok.Getter;
 
 @Entity
 @Table(name = "ROUTE")
+@Getter
 @SequenceGenerator(name = "route_seq", sequenceName = "ROUTE_SEQ", allocationSize = 1)
 public class Route {
 
@@ -23,3 +25,4 @@ public class Route {
     @Column(nullable = false, length = 100)
     private String arrival;
 }
+	

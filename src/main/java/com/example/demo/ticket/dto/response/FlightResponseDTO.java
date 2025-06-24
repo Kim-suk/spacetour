@@ -4,7 +4,6 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.example.demo.ticket.repository.model.SpaceshipSeatPrice;
 import com.example.demo.ticket.type.SeatGrade;
 
 import lombok.Getter;
@@ -20,11 +19,11 @@ public class FlightResponseDTO {
 
     private LocalDateTime departureTime;
     private LocalDateTime arrivalTime;
-    
+
     private String duration; // ✅ 추가
 
     private List<SeatInfoDTO> seatInfoList;
-    
+
     public void calculateDuration() {
         if (departureTime != null && arrivalTime != null) {
             Duration d = Duration.between(departureTime, arrivalTime);
@@ -34,21 +33,15 @@ public class FlightResponseDTO {
         }
     }
 
-    // getter/setter 생략 (Lombok 써도 됨)
-    
     @Getter
     @Setter
     public static class SeatInfoDTO {
         private SeatGrade seatGrade;
         private int price;
         private int remainingSeats;
-        private int totalSeats;    // 추가
-        private boolean operated;   // "Y" or "N"
-        private boolean soldOut;    // true = 매진
-
-        // getter/setter 생략
+        private int totalSeats;
+        private boolean operated;
+        private boolean soldOut;
     }
-
-    // getters and setters
 }
 

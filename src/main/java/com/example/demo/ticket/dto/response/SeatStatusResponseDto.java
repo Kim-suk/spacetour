@@ -2,50 +2,37 @@ package com.example.demo.ticket.dto.response;
 
 import com.example.demo.ticket.repository.model.Seat;
 import com.example.demo.ticket.type.SeatGrade;
+import com.example.demo.ticket.type.SeatStatus;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
 @Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class SeatStatusResponseDto {
-    private String seatNumber;
-    private boolean isReserved;
-    private boolean isBlocked;
+	private String seatNumber;
+    private SeatStatus seatStatus;  // boolean -> Enum으로 변경
     private SeatGrade grade;
-    private boolean isSelectable;
 
-    // allowedGrade가 있을 때, 해당 등급만 선택 가능
-    public static SeatStatusResponseDto from(Seat seat, SeatGrade allowedGrade) {
-        boolean reserved = "Y".equals(seat.getIsReserved());
-        boolean blocked = "Y".equals(seat.getIsBlocked());
-        boolean selectable = !reserved && !blocked && seat.getSeatGrade() == allowedGrade;
-
+    private int x; // 좌표 UI용
+    private int y; // 좌표 UI용
+    
+    private String seatImage; // 추가된 필드
+    
+    public static SeatStatusResponseDto from(Seat seat, int x, int y) {
+        // blocked 상태가 있다면 추가 처리 필요
         return new SeatStatusResponseDto(
             seat.getSeatNumber(),
-            reserved,
-            blocked,
+            seat.getSeatStatus(),
             seat.getSeatGrade(),
-            selectable
-        );
-    }
-
-    // allowedGrade 없이 호출 시, selectable은 reserved, blocked 여부만 보고 판단
-    public static SeatStatusResponseDto from(Seat seat) {
-        boolean reserved = "Y".equals(seat.getIsReserved());
-        boolean blocked = "Y".equals(seat.getIsBlocked());
-        boolean selectable = !reserved && !blocked; // 등급 체크 없이 예약 가능 여부만 판단
-        
-        return new SeatStatusResponseDto(
-            seat.getSeatNumber(),
-            reserved,
-            blocked,
-            seat.getSeatGrade(),
-            selectable
+            x,
+            y,
+            seat.getSeatImage()
         );
     }
 }

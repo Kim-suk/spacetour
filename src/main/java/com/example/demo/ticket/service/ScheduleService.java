@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import com.example.demo.ticket.dto.request.ScheduleRequestDTO;
 import com.example.demo.ticket.dto.response.FlightResponseDTO;
 import com.example.demo.ticket.dto.response.FlightResponseDTO.SeatInfoDTO;
+import com.example.demo.ticket.dto.response.FlightSearchResultDTO;
 import com.example.demo.ticket.dto.response.SeatMapResponseDto;
 import com.example.demo.ticket.dto.response.SeatStatusResponseDto;
 import com.example.demo.ticket.repository.interfaces.ScheduleRepository;
@@ -26,6 +27,7 @@ import com.example.demo.ticket.repository.model.Spaceship;
 import com.example.demo.ticket.repository.model.SpaceshipSeatConfig;
 import com.example.demo.ticket.repository.model.SpaceshipSeatPrice;
 import com.example.demo.ticket.type.SeatGrade;
+import com.example.demo.ticket.type.SeatStatus;
 import com.example.demo.ticket.type.TripType;
 
 import lombok.RequiredArgsConstructor;
@@ -47,34 +49,35 @@ public class ScheduleService {
 	
 	// 입력 : 사용자의 검색 조건을 담은 ScheduleRequestDTO
 	// 출력 : 조건에 맞는 FlightResponseDTO 리스트(출발편 + 복귀편)
-    public List<FlightResponseDTO> findFlightsByCondition(ScheduleRequestDTO dto) {
-        // 출발편 조회 (출발지 -> 도착지, 출발일)
+    public FlightSearchResultDTO findFlightsByCondition(ScheduleRequestDTO dto) {
         List<Schedule> departureSchedules = scheduleRepository.findByRouteDepartureAndRouteArrivalAndDepartureDate(
-                dto.getDeparture(),			// 출발지 (예: "Earth")
-                dto.getDestination(),		// 도착지 (예: "Mars")
-                dto.getDepartureDate());	// 출발 날짜 (예: 2025-07-01
+                dto.getDeparture(),
+                dto.getDestination(),
+                dto.getDepartureDate());
 
-        
-         
         List<Schedule> returnSchedules = new ArrayList<>();
-        // 사용자의 여행 타입이 왕복(ROUNDTRIP)이고, 복귀 날짜가 입력되어 있다면 복귀편을 조회
         if (dto.getTripType() == TripType.ROUNDTRIP && dto.getReturnDate() != null) {
-            // 복귀편 조회 (도착지 -> 출발지, 복귀일)
             returnSchedules = scheduleRepository.findByRouteDepartureAndRouteArrivalAndDepartureDate(
-                    dto.getDestination(),		// 복귀 시 도착지가 원래의 출발지
-                    dto.getDeparture(),			// 복귀 시 출발지가 원래의 도착지
-                    dto.getReturnDate());		// 복귀 날짜
+                    dto.getDestination(),
+                    dto.getDeparture(),
+                    dto.getReturnDate());
         }
-        
-        // Schedule 객체를 FlightResponseDTO로 변환해서 result 리스트에 담습니다.
-        // convertToDTO(scheudle)는 내부적으로 날짜/시간/좌석 정보까지 포함해 변환합니다.
-        List<FlightResponseDTO> result = new ArrayList<>();
-        departureSchedules.forEach(schedule -> result.add(convertToDTO(schedule)));
-        returnSchedules.forEach(schedule -> result.add(convertToDTO(schedule)));
 
-        // 출발편 + (왕복이면) 복귀편이 담긴 DTO 리스트를 반환
+        List<FlightResponseDTO> departureFlights = departureSchedules.stream()
+                .map(this::convertToDTO)
+                .toList();
+
+        List<FlightResponseDTO> returnFlights = returnSchedules.stream()
+                .map(this::convertToDTO)
+                .toList();
+
+        FlightSearchResultDTO result = new FlightSearchResultDTO();
+        result.setDepartureFlights(departureFlights);
+        result.setReturnFlights(returnFlights);
+
         return result;
     }
+
 
     // 이 convertToDTO(Schedule schedule) 메서드는 데이터베이스에서 가져온 Schedule 엔티티 객체를
     // **사용자에게 보여줄 형식(응답 DTO)**인 FlightResponseDTO로 변환해주는 역할을 합니다.
@@ -143,6 +146,7 @@ public class ScheduleService {
          */
         public SeatMapResponseDto getSeatMapAllGrades(Long scheduleId) {
             List<Seat> seats = seatRepository.findByScheduleId(scheduleId);
+            System.out.println("찾은 좌석 개수: " + (seats != null ? seats.size() : "null"));
             return SeatMapResponseDto.from(seats);
         }
 
@@ -166,7 +170,7 @@ public class ScheduleService {
 
                 int totalSeats = seatsOfGrade.size();
                 int reservedCount = (int) seatsOfGrade.stream()
-                        .filter(s -> "Y".equals(s.getIsReserved()))
+                		.filter(s -> s.getSeatStatus() == SeatStatus.RESERVED|| (s.getSeatStatus() == SeatStatus.LOCKED && !s.isAvailableForLock()))
                         .count();
 
                 SeatInfoDTO dto = new SeatInfoDTO();
@@ -214,7 +218,7 @@ public class ScheduleService {
 
                 int totalSeats = seatsOfGrade.size();
                 int reservedCount = (int) seatsOfGrade.stream()
-                        .filter(s -> "Y".equals(s.getIsReserved()))
+                		.filter(s -> s.getSeatStatus() == SeatStatus.RESERVED|| (s.getSeatStatus() == SeatStatus.LOCKED && !s.isAvailableForLock()))
                         .count();
 
                 FlightResponseDTO.SeatInfoDTO dto = new FlightResponseDTO.SeatInfoDTO();
