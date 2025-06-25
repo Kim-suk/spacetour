@@ -204,7 +204,7 @@ CesiumJS는 고성능 3D 지구 및 지도 렌더링 라이브러리이며, sate
 
 ![스크린샷 2025-06-21 010315](https://github.com/user-attachments/assets/9bd880ce-45ea-42be-804f-6df13be1c5a5)
 
-+ 파일 업로드(사진 누르면 크게 보기 가능)
++ 파일 업로드(미리보기, 사진 누르면 크게 보기 가능)
   
 ![스크린샷 2025-06-21 013650](https://github.com/user-attachments/assets/6325f444-0054-47b6-98f7-8a05fe446e50)
 
@@ -222,10 +222,48 @@ CesiumJS는 고성능 3D 지구 및 지도 렌더링 라이브러리이며, sate
 
 ![mechat](https://github.com/user-attachments/assets/bfe6aca6-106b-4918-80e1-37282245ad4f)
 
++ 전체 보기
+: 메세지가 100자 이상일시에 더보기 버튼으로 모달 띄워줌
+
+![스크린샷 2025-06-21 001337](https://github.com/user-attachments/assets/b7033664-b1e7-444a-9006-8244e5700698)
+
++ 공지 사항
+: 중요 내용 또는 긴급한 내용을 사라지지않게 상단 또는 잘보이는 곳에 위치하도록 공지하는 기능 ( 채팅방 목록쪽에 배치하였다.)
+
+![스크린샷 2025-06-21 011053](https://github.com/user-attachments/assets/08fb8ddb-94d2-4dec-86e2-970656644090)
+
+![스크린샷 2025-06-21 011212](https://github.com/user-attachments/assets/6b44630c-6b91-4cf1-9322-20dff63b620e)
+
++ 공유 하기
+: 원하는 상대방에게 공유하기 기능
+
+![스크린샷 2025-06-21 003543](https://github.com/user-attachments/assets/2a83e98a-3b2e-4b21-8323-6b7569a8ca3e)
+
+![스크린샷 2025-06-21 003643](https://github.com/user-attachments/assets/2ef5d948-210b-4548-8406-0cea34f8eaa3)
+
+![스크린샷 2025-06-21 003732](https://github.com/user-attachments/assets/d1f4d98e-97a7-4934-abe8-93cd1dca9028)
+
++ 답장
+; 메세지가 길어지거나 양이 많아질때 상대방의 이해력을 돕기위한 답장기능, 또는 그룹채팅에서도 쓰기 유용한 기능
+
+![스크린샷 2025-06-21 002427](https://github.com/user-attachments/assets/9f4cb8d7-b660-480b-88cc-40d8ef1a5589)
+
++ 메세지 삭제
+  
+![스크린샷 2025-06-21 010107](https://github.com/user-attachments/assets/bcee7d54-eb3f-4cac-82bb-c4ba1de42b3b)
+
 
 + 채팅방 나가기(상대방에게 나갓다는 알림과, 상대방은 채팅 내역이 남아잇고, 나간사람은 채팅방이 사라짐과 동시에 기록도 모두 사라짐)
+
+  
 + 프로필 이미지 변경 , 저장 (프로필이미지 우클릭시)
+
+![스크린샷 2025-06-21 012020](https://github.com/user-attachments/assets/780e22ea-a592-4b6c-baba-0381c5641146)
+
 + 실시간 현재 접속자 렌더링(페이지를 기준으로 채팅페이지를 나가면 접속자 목록에서 사라짐)
+
+![스크린샷 2025-06-19 174134](https://github.com/user-attachments/assets/13a54afa-a720-4aa1-987a-978a13cff8e5)
+
 
 </details>
 
