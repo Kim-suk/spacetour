@@ -347,25 +347,23 @@ CesiumJS는 고성능 3D 지구 및 지도 렌더링 라이브러리이며, sate
 
 <hr style="border: 3px solid #000;">
 
-## 🧭스토리 보드
-*FIGMA*
+## 📊 프로젝트 자료
 
-https://www.figma.com/design/TwF9fVmaqF8oSR83Z5MBeW/%EC%88%98%ED%8F%89%EC%84%A0?node-id=0-1&p=f&t=VnWJGuVSjZvHg4VJ-0
+### 🎞️ 스토리보드 (PPT)
+- 서비스 흐름과 화면 기획 요약본
+- 👉 ![image](https://github.com/user-attachments/assets/24d487cc-284c-41f0-953e-e620065a0f9b)(링크)
 
+### 🎨 UI/UX 디자인 (Figma)
+- 실제 화면 디자인 및 인터랙션
+- 👉*FIGMA*
+  
+(https://www.figma.com/design/TwF9fVmaqF8oSR83Z5MBeW/%EC%88%98%ED%8F%89%EC%84%A0?node-id=0-1&p=f&t=VnWJGuVSjZvHg4VJ-0)
 <hr style="border: 3px solid #000;">
-
-## 🧭스토리 보드
-
-![image](https://github.com/user-attachments/assets/24d487cc-284c-41f0-953e-e620065a0f9b)
-
------
 
 ## WBS 
 C:\Users\82103\Documents\카카오톡 받은 파일\우주여행예약 WBS.xlsx
 
-## 🗃 PRESENTATION
-### 📎[계란고냥이](https://docs.google.com/presentation/d/1CY25JnAKzPIY2Xtao2h9KX9L9YvBFZdpKj--OTn5MUw/edit?slide=id.p1#slide=id.p1)
-
+---
 ## 🧶ERD ( DB 설계)
 ![ERD](https://github.com/user-attachments/assets/b6b1a397-8bfd-49bb-a878-e45952142601)
 
