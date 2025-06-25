@@ -97,15 +97,10 @@ CesiumJS는 고성능 3D 지구 및 지도 렌더링 라이브러리이며, sate
 
 ![temppassword-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/ee951712-cf75-4332-8282-363983b9c968)
 
-
 '새 비밀번호' 와 '새 비밀번호 확인' 입력한 후에 '비밀번호 변경' 버튼을 누르면 비밀번호 변경 완료!
 
 <img width="800" alt="image" src="https://github.com/user-attachments/assets/60baba44-b90f-4447-be27-89951d0cbe83" />
 <img width="800" alt="image" src="https://github.com/user-attachments/assets/d1b5f5bd-c149-4a7c-8e34-1548b1cec5c7" />
-
-
-
-
 
 </details>
 
@@ -139,9 +134,6 @@ CesiumJS는 고성능 3D 지구 및 지도 렌더링 라이브러리이며, sate
 8️⃣ : 마지막으로 '이용약관' 체크박스를 누른 후, '회원가입'버튼을 누르면 정상적으로 "회원가입 완료"!!
 
 <img width="800" alt="image" src="https://github.com/user-attachments/assets/f52281f5-2c8c-4e23-a4d5-c985e7c2133e" />
-
-
-
 
 </details>
 
@@ -255,7 +247,22 @@ CesiumJS는 고성능 3D 지구 및 지도 렌더링 라이브러리이며, sate
 
 + 채팅방 나가기(상대방에게 나갓다는 알림과, 상대방은 채팅 내역이 남아잇고, 나간사람은 채팅방이 사라짐과 동시에 기록도 모두 사라짐)
 
-  
+![스크린샷 2025-06-21 015717](https://github.com/user-attachments/assets/2b486feb-8c5a-49fc-a426-499c043b386a)
+
+![스크린샷 2025-06-21 020040](https://github.com/user-attachments/assets/18863bf0-6824-4816-84d1-f11e17854230)
+
++ 이모지 전송
+
+![스크린샷 2025-06-21 014139](https://github.com/user-attachments/assets/c1611828-71f9-4ec1-95a4-f2b42b70131d)
+
+![스크린샷 2025-06-21 014455](https://github.com/user-attachments/assets/ab426afc-1e69-4e86-96fb-bc3867cdbdfc)
+
+![스크린샷 2025-06-21 014204](https://github.com/user-attachments/assets/f246fab7-2e90-4637-a814-352c21408c6e)
+
++ GIF 파일 전송
+
+![스크린샷 2025-06-20 230158](https://github.com/user-attachments/assets/6e60428b-5559-4f21-aa76-9a0ac242ff62)
+
 + 프로필 이미지 변경 , 저장 (프로필이미지 우클릭시)
 
 ![스크린샷 2025-06-21 012020](https://github.com/user-attachments/assets/780e22ea-a592-4b6c-baba-0381c5641146)
@@ -263,7 +270,6 @@ CesiumJS는 고성능 3D 지구 및 지도 렌더링 라이브러리이며, sate
 + 실시간 현재 접속자 렌더링(페이지를 기준으로 채팅페이지를 나가면 접속자 목록에서 사라짐)
 
 ![스크린샷 2025-06-19 174134](https://github.com/user-attachments/assets/13a54afa-a720-4aa1-987a-978a13cff8e5)
-
 
 </details>
 
@@ -274,6 +280,7 @@ CesiumJS는 고성능 3D 지구 및 지도 렌더링 라이브러리이며, sate
 
 + 원하는 나라를 3D지구본에서 선택하면 해당하는 나라의 날씨를 실시간으로가져옴( weather API)
 자동 완성 검색 기능(날씨가 궁금한 나라의 이름을 자동완성 기능으로 찾으면 3D지구본이 자동으로 해당하는 나라의 국기로 마커를 찍어주고 그 나라도 실시간으로 날씨를 보여줌)
+
 ![image](https://github.com/user-attachments/assets/6c32a2a2-2fe5-47af-a316-a66ad6ebe6f8)
 
 
