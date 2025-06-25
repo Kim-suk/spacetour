@@ -159,7 +159,8 @@ CesiumJS는 고성능 3D 지구 및 지도 렌더링 라이브러리이며, sate
 
 + 비밀번호 변경  
 : 기존 비밀번호 입력 후 새 비밀번호 입력
-: !! 여기서 다른점은 비밀번호 찾기 페이지와 동일한 페이지지만 **마이페이지에서 접속하였을경우 현재 비밀번호를 입력하는 창이 나온다.**
+: !! 여기서 다른점은 비밀번호 찾기 페이지와 동일한 페이지지만 **마이페이지에서 접속하였을 경우 현재 비밀번호를 입력하는 창이 나온다.**
+
 ![image](https://github.com/user-attachments/assets/a23c78b0-a04b-4d2a-931b-0f1d3f17bb6d)
 
 ![image](https://github.com/user-attachments/assets/24696e53-40ee-42ab-932c-58cd50a94230)
