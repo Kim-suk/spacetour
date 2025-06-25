@@ -47,7 +47,7 @@ CesiumJS는 고성능 3D 지구 및 지도 렌더링 라이브러리이며, sate
 ### 🛠️ 팀원
 - 💎 **김수경**
   - [GitHub](https://github.com/Kim-suk)
-  - 
+  
 - 🧩 **양평근**
   - [GitHub](https://github.com/ypk0680)
 
