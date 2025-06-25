@@ -354,6 +354,12 @@ https://www.figma.com/design/TwF9fVmaqF8oSR83Z5MBeW/%EC%88%98%ED%8F%89%EC%84%A0?
 
 <hr style="border: 3px solid #000;">
 
+## 🧭스토리 보드
+
+![image](https://github.com/user-attachments/assets/24d487cc-284c-41f0-953e-e620065a0f9b)
+
+-----
+
 ## WBS 
 C:\Users\82103\Documents\카카오톡 받은 파일\우주여행예약 WBS.xlsx
 
