@@ -338,8 +338,6 @@ CesiumJS는 고성능 3D 지구 및 지도 렌더링 라이브러리이며, sate
 
 ![gibs](https://github.com/user-attachments/assets/ef2f1d1f-0b23-4c77-9834-4848ecbdea09)
 
-![gibs](https://github.com/user-attachments/assets/8c50b7a6-4960-4df8-866e-6577f122985f)
-
 </details>
 <hr style="border: 3px solid #000;">
 
