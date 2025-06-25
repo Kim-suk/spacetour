@@ -1,4 +1,4 @@
-![스크린샷 2025-06-11 212356](https://github.com/user-attachments/assets/04a6c310-ec3f-4f35-bfc7-05bcf2e0a14c)
+![gibs](https://github.com/user-attachments/assets/60c45757-3577-4869-bacb-67b85b3ce16c)![스크린샷 2025-06-11 212356](https://github.com/user-attachments/assets/04a6c310-ec3f-4f35-bfc7-05bcf2e0a14c)
 
 # 🚀 우주 여행
 KG아이티뱅크에서 주관한 프로젝트로, Spring Boot 3.4.5를 사용하여 개발한 우주 여행 웹사이트입니다.
@@ -193,6 +193,7 @@ CesiumJS는 고성능 3D 지구 및 지도 렌더링 라이브러리이며, sate
 
 <details>
 <summary>✅ 예약하기(ticket) </summary>
+  
 + 안내사항
 : 예약하기 페이지를 들어가면 들어가자마자 팝업창으로 안내문을 가장 먼저 띄워서 사용자들에게 강조해서 알려준다.
 
@@ -222,7 +223,41 @@ CesiumJS는 고성능 3D 지구 및 지도 렌더링 라이브러리이며, sate
 
 ![스크린샷 2025-06-21 013723](https://github.com/user-attachments/assets/1c02ae82-03eb-4f87-baf0-a606d92cb0e9)
 
-+ 채팅 내역 상세 기능( 메세지 우 클릭시 전체보기, 복사, 답장, 공지,공유,나에게,삭제)
+
++ 채팅방 나가기(상대방에게 나갓다는 알림과, 상대방은 채팅 내역이 남아잇고, 나간사람은 채팅방이 사라짐과 동시에 기록도 모두 사라짐)
+
+![스크린샷 2025-06-21 015717](https://github.com/user-attachments/assets/2b486feb-8c5a-49fc-a426-499c043b386a)
+
+![스크린샷 2025-06-21 020040](https://github.com/user-attachments/assets/18863bf0-6824-4816-84d1-f11e17854230)
+
++ 이모지 전송
+
+![스크린샷 2025-06-21 014139](https://github.com/user-attachments/assets/c1611828-71f9-4ec1-95a4-f2b42b70131d)
+
+![스크린샷 2025-06-21 014455](https://github.com/user-attachments/assets/ab426afc-1e69-4e86-96fb-bc3867cdbdfc)
+
+![스크린샷 2025-06-21 014204](https://github.com/user-attachments/assets/f246fab7-2e90-4637-a814-352c21408c6e)
+
++ GIF 파일 전송
+
+![스크린샷 2025-06-20 230158](https://github.com/user-attachments/assets/6e60428b-5559-4f21-aa76-9a0ac242ff62)
+
++ 프로필 이미지 변경 , 저장 (프로필이미지 우클릭시)
+
+![스크린샷 2025-06-21 012020](https://github.com/user-attachments/assets/780e22ea-a592-4b6c-baba-0381c5641146)
+
++ 실시간 현재 접속자 렌더링(페이지를 기준으로 채팅페이지를 나가면 접속자 목록에서 사라짐)
+
+![스크린샷 2025-06-19 174134](https://github.com/user-attachments/assets/13a54afa-a720-4aa1-987a-978a13cff8e5)
+
+</details>
+
+<hr style="border: 3px solid #000;">
+
+<details>
+<summary>✅ 채팅 상세 기능(채팅)</summary>
+
++  전체보기, 복사, 답장, 공지,공유,나에게,삭제)
   
 ![스크린샷 2025-06-20 232228](https://github.com/user-attachments/assets/67fa62b4-5121-42c5-aa3e-4181ccca6d9e)
 
@@ -260,36 +295,14 @@ CesiumJS는 고성능 3D 지구 및 지도 렌더링 라이브러리이며, sate
 
 ![스크린샷 2025-06-21 002427](https://github.com/user-attachments/assets/9f4cb8d7-b660-480b-88cc-40d8ef1a5589)
 
+![스크린샷 2025-06-21 002654](https://github.com/user-attachments/assets/a3e25a0c-6112-4260-a073-56101146f75e)
+
 + 메세지 삭제
   
 ![스크린샷 2025-06-21 010107](https://github.com/user-attachments/assets/bcee7d54-eb3f-4cac-82bb-c4ba1de42b3b)
 
-
-+ 채팅방 나가기(상대방에게 나갓다는 알림과, 상대방은 채팅 내역이 남아잇고, 나간사람은 채팅방이 사라짐과 동시에 기록도 모두 사라짐)
-
-![스크린샷 2025-06-21 015717](https://github.com/user-attachments/assets/2b486feb-8c5a-49fc-a426-499c043b386a)
-
-![스크린샷 2025-06-21 020040](https://github.com/user-attachments/assets/18863bf0-6824-4816-84d1-f11e17854230)
-
-+ 이모지 전송
-
-![스크린샷 2025-06-21 014139](https://github.com/user-attachments/assets/c1611828-71f9-4ec1-95a4-f2b42b70131d)
-
-![스크린샷 2025-06-21 014455](https://github.com/user-attachments/assets/ab426afc-1e69-4e86-96fb-bc3867cdbdfc)
-
-![스크린샷 2025-06-21 014204](https://github.com/user-attachments/assets/f246fab7-2e90-4637-a814-352c21408c6e)
-
-+ GIF 파일 전송
-
-![스크린샷 2025-06-20 230158](https://github.com/user-attachments/assets/6e60428b-5559-4f21-aa76-9a0ac242ff62)
-
-+ 프로필 이미지 변경 , 저장 (프로필이미지 우클릭시)
-
-![스크린샷 2025-06-21 012020](https://github.com/user-attachments/assets/780e22ea-a592-4b6c-baba-0381c5641146)
-
-+ 실시간 현재 접속자 렌더링(페이지를 기준으로 채팅페이지를 나가면 접속자 목록에서 사라짐)
-
-![스크린샷 2025-06-19 174134](https://github.com/user-attachments/assets/13a54afa-a720-4aa1-987a-978a13cff8e5)
++ 복사
+: 복사를 누른 후 ctrl + v를 하면 붙여넣기가 된다.
 
 </details>
 
@@ -308,10 +321,9 @@ CesiumJS는 고성능 3D 지구 및 지도 렌더링 라이브러리이며, sate
 
 ![스크린샷 2025-06-21 021212](https://github.com/user-attachments/assets/b5f719eb-04cb-4a9d-9f92-0a74d4a6ec12)
 
-+ 해당하는 나라의 국기로 마커를 찍어줌
++ 해당하는 나라의 국기로 마커를 찍고 실시간으로 날씨를 불러온다.
 
 ![스크린샷 2025-06-21 021515](https://github.com/user-attachments/assets/aae9b5d2-9179-47f4-bfad-58808ebcbc38)
-
 
 </details>
 <hr style="border: 3px solid #000;">
@@ -325,6 +337,8 @@ CesiumJS는 고성능 3D 지구 및 지도 렌더링 라이브러리이며, sate
 ![image](https://github.com/user-attachments/assets/e88bd039-3a1d-4df4-9267-5b865770deb3)
 
 ![gibs](https://github.com/user-attachments/assets/ef2f1d1f-0b23-4c77-9834-4848ecbdea09)
+
+![gibs](https://github.com/user-attachments/assets/8c50b7a6-4960-4df8-866e-6577f122985f)
 
 </details>
 <hr style="border: 3px solid #000;">
