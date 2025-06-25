@@ -148,11 +148,12 @@ CesiumJS는 고성능 3D 지구 및 지도 렌더링 라이브러리이며, sate
 <hr style="border: 3px solid #000;">
 <details>
 <summary>✅ 정보 수정 (My page)</summary>
-  
-![image](https://github.com/user-attachments/assets/c8480845-ccc4-4efe-9839-88712323cf2b)
 
+![image](https://github.com/user-attachments/assets/b35d478e-dd1d-4f3e-8105-25e2e8753e6a)
 + 프로필 이미지 변경/개인정보 수정 
 : 로그인 ID, 회원명을 제외한 이메일, 전화번호, 주소만 정보수정 가능
+  
+![image](https://github.com/user-attachments/assets/c8480845-ccc4-4efe-9839-88712323cf2b)
 
 ![pro](https://github.com/user-attachments/assets/d9265bb0-559d-4f51-a85f-8e41cce64874)
 
