@@ -194,9 +194,15 @@ CesiumJS는 고성능 3D 지구 및 지도 렌더링 라이브러리이며, sate
 <details>
 <summary>✅ 예약하기(ticket) </summary>
 + 안내사항
-+ 일정 선택
-: 
-+ 
+: 예약하기 페이지를 들어가면 들어가자마자 팝업창으로 안내문을 가장 먼저 띄워서 사용자들에게 강조해서 알려준다.
+
+![image](https://github.com/user-attachments/assets/d2bf1697-20b7-4542-8c82-e3b84dc4aea2)
+
++ 우주 일정 선택
+: 편도, 왕복, 출발지, 도착지, 출발일, 탑승인원(최대3인 제한) 선택, 왕복을 클릭하면 복귀일을 고를수 있는 칸이 생성된다.
+
+![image](https://github.com/user-attachments/assets/7412f3ee-b321-4307-bed8-d7c852f2c2d3)
+
 
 
 </details>
