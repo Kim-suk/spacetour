@@ -115,13 +115,25 @@ CesiumJS는 고성능 3D 지구 및 지도 렌더링 라이브러리이며, sate
 
 1️⃣ : 아이디 입력후 아이디 중복여부를 확인하기 위해서 '아이디 중복확인' 클릭!! 
 
+![스크린샷 2025-06-19 165649](https://github.com/user-attachments/assets/663c6d6f-5ff3-4f90-a84f-07fe9d1f5fb8)
+
 -> 해당하는 아이디가 존재하면, "이미 사용중인 아이디입니다." 알림
+
+![스크린샷 2025-06-19 165558](https://github.com/user-attachments/assets/bdabb310-16e9-409d-a38b-9bee57bd8aa8)
 
 -> 해당하는 아이디가 존재하지 않으면, "사용 가능한 아이디입니다." 알림
 
+![스크린샷 2025-06-19 165510](https://github.com/user-attachments/assets/863922b4-abe7-45a2-a80c-5425edc16595)
+
 2️⃣ : 비밀번호는 정규식에 의해서, 비밀번호 보안을 한층더 강화
 
+![스크린샷 2025-06-19 165837](https://github.com/user-attachments/assets/428b77b4-f172-4bc9-bc50-44d548befb2f)
+
 3️⃣ : 이메일을 입력후 "이메일 중복 확인" 버튼을 눌러 해당하는 이메일이 존재하는지 안하는지 존재 여부를 알려줌.
+
+![스크린샷 2025-06-19 170241](https://github.com/user-attachments/assets/e7368507-22fc-47fb-9baa-b4397b925ad8)
+
+![스크린샷 2025-06-19 170350](https://github.com/user-attachments/assets/7a018bc0-0e65-4992-b65a-c615d6c6a94b)
 
 4️⃣ : 이름, 생년월일, 성별 을 입력 및 선택 
 
@@ -130,6 +142,8 @@ CesiumJS는 고성능 3D 지구 및 지도 렌더링 라이브러리이며, sate
 6️⃣ : 휴대전화번를 입력후 "인증번호 전송"을 클릭, 전송받은 인증번호를 입력 후 "인증번호 확인" 버튼 클릭
 
 7️⃣ : "주소찾기"버튼을 클릭하면 주소API를 이용한 우변펀호 와 도로명 주소, 지번을 한번에 입력 받을 수 있음. 
+
+![스크린샷 2025-06-19 170834](https://github.com/user-attachments/assets/c0c3f6b1-a4a3-4c47-9bba-cc3fa9c4d583)
 
 8️⃣ : 마지막으로 '이용약관' 체크박스를 누른 후, '회원가입'버튼을 누르면 정상적으로 "회원가입 완료"!!
 
@@ -278,11 +292,19 @@ CesiumJS는 고성능 3D 지구 및 지도 렌더링 라이브러리이며, sate
 <details>
 <summary>✅ 지구 기후 상황</summary>
 
+![스크린샷 2025-06-21 021643](https://github.com/user-attachments/assets/e0e8df39-7bd4-4a69-a281-eb9f253865b9)
+
 + 원하는 나라를 3D지구본에서 선택하면 해당하는 나라의 날씨를 실시간으로가져옴( weather API)
-자동 완성 검색 기능(날씨가 궁금한 나라의 이름을 자동완성 기능으로 찾으면 3D지구본이 자동으로 해당하는 나라의 국기로 마커를 찍어주고 그 나라도 실시간으로 날씨를 보여줌)
 
-![image](https://github.com/user-attachments/assets/6c32a2a2-2fe5-47af-a316-a66ad6ebe6f8)
+![스크린샷 2025-06-21 020755](https://github.com/user-attachments/assets/c30154fa-cd68-4418-ad9a-cdfe41964b34)
 
++ 자동 완성 검색 기능
+
+![스크린샷 2025-06-21 021212](https://github.com/user-attachments/assets/b5f719eb-04cb-4a9d-9f92-0a74d4a6ec12)
+
++ 해당하는 나라의 국기로 마커를 찍어줌
+
+![스크린샷 2025-06-21 021515](https://github.com/user-attachments/assets/aae9b5d2-9179-47f4-bfad-58808ebcbc38)
 
 
 </details>
@@ -304,6 +326,8 @@ CesiumJS는 고성능 3D 지구 및 지도 렌더링 라이브러리이며, sate
 <details>
 <summary>✅ Cesium Ion </summary>
 + Ceseium API 사용 -> 위성 실시간 위치 갱신
+  
+![스크린샷 2025-06-21 032949](https://github.com/user-attachments/assets/01f4ab53-270f-4a5c-8865-c888094956ef)
 
 
 </details>
