@@ -88,6 +88,25 @@ CesiumJS는 고성능 3D 지구 및 지도 렌더링 라이브러리이며, sate
 
 + 비밀번호 찾기(javamail,Google STOMP)
 아이디와 이메일을 입력하면 해당하는 이메일로 임시비밀번호를 발급해 줍니다.
+
+![findpassword-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/19f5f0b7-c332-4dc6-8968-f128d174b41d)
+
+해당하는 메일로 전송된 '임시비밀번호'를 복사해서, '임시비밀번호입력'란에 입력한 후 '임시 비밀번호 확인' 버튼 클릭!
+
+     -> '임시비밀번호'가 맞다면 '비밀번호변경' 페이지로 이동!!
+
+![temppassword-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/ee951712-cf75-4332-8282-363983b9c968)
+
+
+'새 비밀번호' 와 '새 비밀번호 확인' 입력한 후에 '비밀번호 변경' 버튼을 누르면 비밀번호 변경 완료!
+
+<img width="800" alt="image" src="https://github.com/user-attachments/assets/60baba44-b90f-4447-be27-89951d0cbe83" />
+<img width="800" alt="image" src="https://github.com/user-attachments/assets/d1b5f5bd-c149-4a7c-8e34-1548b1cec5c7" />
+
+
+
+
+
 </details>
 
 <hr style="border: 3px solid #000;">
@@ -114,7 +133,6 @@ CesiumJS는 고성능 3D 지구 및 지도 렌더링 라이브러리이며, sate
 
 + 비밀번호 변경  
 : 기존 비밀번호 입력 후 새 비밀번호 입력
-
 ![image](https://github.com/user-attachments/assets/df7844ea-8f56-4da5-8ff7-79e4ae28abe5)
 
 + 회원 탈퇴  
