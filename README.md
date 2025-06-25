@@ -351,7 +351,11 @@ CesiumJS는 고성능 3D 지구 및 지도 렌더링 라이브러리이며, sate
 
 ### 🎞️ 스토리보드 (PPT)
 - 서비스 흐름과 화면 기획 요약본
-- 👉 ![image](https://github.com/user-attachments/assets/24d487cc-284c-41f0-953e-e620065a0f9b)(링크)
+- 👉 ![image](https://github.com/user-attachments/assets/24d487cc-284c-41f0-953e-e620065a0f9b)
+
+(https://docs.google.com/presentation/d/12QLhK0n4ehCRoFopw73NukH6HiY3r00X/edit?usp=drive_web&ouid=115265115342844139543&rtpof=true)
+
+
 
 ### 🎨 UI/UX 디자인 (Figma)
 - 실제 화면 디자인 및 인터랙션
