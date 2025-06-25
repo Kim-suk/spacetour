@@ -148,15 +148,18 @@ CesiumJS는 고성능 3D 지구 및 지도 렌더링 라이브러리이며, sate
 <hr style="border: 3px solid #000;">
 <details>
 <summary>✅ 정보 수정 (My page)</summary>
+  
+![image](https://github.com/user-attachments/assets/c8480845-ccc4-4efe-9839-88712323cf2b)
 
-+ 회원 정보 수정  
-: 이름, 나이, 이메일
++ 프로필 이미지 변경/개인정보 수정 
+: 로그인 ID, 회원명을 제외한 이메일, 전화번호, 주소만 정보수정 가능
 
-![image](https://github.com/user-attachments/assets/b1624cdb-8f3e-4478-a085-122e2dd10217)
+![pro](https://github.com/user-attachments/assets/d9265bb0-559d-4f51-a85f-8e41cce64874)
 
 + 비밀번호 변경  
 : 기존 비밀번호 입력 후 새 비밀번호 입력
-![image](https://github.com/user-attachments/assets/df7844ea-8f56-4da5-8ff7-79e4ae28abe5)
+: !! 여기서 다른점은 비밀번호 찾기 페이지와 동일한 페이지지만 **마이페이지에서 접속하였을경우 현재 비밀번호를 입력하는 창이 나온다.**
+
 
 + 회원 탈퇴  
 : 현재 비밀번호 입력 후 회원탈퇴 가능
