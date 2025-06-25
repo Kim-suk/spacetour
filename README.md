@@ -356,8 +356,7 @@ CesiumJS는 고성능 3D 지구 및 지도 렌더링 라이브러리이며, sate
 ### 🎨 UI/UX 디자인 (Figma)
 - 실제 화면 디자인 및 인터랙션
 - 👉*FIGMA*
-  
-(https://www.figma.com/design/TwF9fVmaqF8oSR83Z5MBeW/%EC%88%98%ED%8F%89%EC%84%A0?node-id=0-1&p=f&t=VnWJGuVSjZvHg4VJ-0)
+(https://www.figma.com/design/TwF9fVmaqF8oSR83Z5MBeW/%EC%88%98%ED%8F%89%EC%84%A0?node-id=0-1&p=f&t=VnWJGuVSjZvHg4VJ-0)](https://www.figma.com/design/TwF9fVmaqF8oSR83Z5MBeW/%EC%88%98%ED%8F%89%EC%84%A0?node-id=169-28&p=f&t=aRDsfEfDwGF4TQlH-0)
 <hr style="border: 3px solid #000;">
 
 ## WBS 
