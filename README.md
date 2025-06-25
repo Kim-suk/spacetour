@@ -160,12 +160,25 @@ CesiumJS는 고성능 3D 지구 및 지도 렌더링 라이브러리이며, sate
 + 비밀번호 변경  
 : 기존 비밀번호 입력 후 새 비밀번호 입력
 : !! 여기서 다른점은 비밀번호 찾기 페이지와 동일한 페이지지만 **마이페이지에서 접속하였을경우 현재 비밀번호를 입력하는 창이 나온다.**
+![image](https://github.com/user-attachments/assets/a23c78b0-a04b-4d2a-931b-0f1d3f17bb6d)
 
+![image](https://github.com/user-attachments/assets/24696e53-40ee-42ab-932c-58cd50a94230)
 
 + 회원 탈퇴  
-: 현재 비밀번호 입력 후 회원탈퇴 가능
+: 마이페이지와 회원정보수정에서 탈퇴하기 가능
+![image](https://github.com/user-attachments/assets/cf2d502a-35c7-46ad-b2de-f968881bb65a)
 
-![image](https://github.com/user-attachments/assets/9e2ce22f-4f0b-4eca-802b-130a2b1511b3)
+![image](https://github.com/user-attachments/assets/a5b9cf6b-4d23-473d-9fb6-f4a36c4cc9fc)
+
+![image](https://github.com/user-attachments/assets/412a3612-1155-4ca5-af58-74f226570139)
+
+![image](https://github.com/user-attachments/assets/0ca07265-9d8b-4575-b81a-8809dd50e428)
+
+: 탈퇴가 완료된후에는 자동으로 메인페이지로 전환
+
++ 채팅 관리
+: 나의 실시간 채팅방으로 연결
+![image](https://github.com/user-attachments/assets/55df59b4-2ae2-4c7b-9106-25bbcf4ff847)
 
 </details>
 
@@ -173,7 +186,10 @@ CesiumJS는 고성능 3D 지구 및 지도 렌더링 라이브러리이며, sate
 
 <details>
 <summary>✅ 예약하기(ticket) </summary>
-
++ 안내사항
++ 일정 선택
+: 
++ 
 
 
 </details>
