@@ -380,7 +380,7 @@ CesiumJS는 고성능 3D 지구 및 지도 렌더링 라이브러리이며, sate
 | IDE | ![STS3](https://img.shields.io/badge/STS3-F7DF1E?style=for-the-badge&logo=Spring&logoColor=black) | Spring Tool Suite 3 (STS) |
 | Database Tool | ![SQL](https://img.shields.io/badge/SQL-4479A1?style=for-the-badge&logo=MySQL&logoColor=black) | MySQL |
 | Server | ![Apache Tomcat](https://img.shields.io/badge/Apache_Tomcat-F8DC75?style=for-the-badge&logo=ApacheTomcat&logoColor=black) | Spring Boot 내장 서버 사용(Tomcat) |
-| Build Tool | ![Gradle](https://img.shields.io/badge/Apache_Maven-C71A36?style=for-the-badge&logo=ApacheGradle&logoColor=white) | Gradle 프로젝트 빌드 관리 |
+| Build Tool | ![Gradle](https://img.shields.io/badge/Gradle-02303A?style=for-the-badge&logo=Gradle&logoColor=white) | Gradle 프로젝트 빌드 관리 |
 
 <hr style="border: 3px solid #000;">
 
