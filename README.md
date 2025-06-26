@@ -209,7 +209,61 @@ CesiumJS는 고성능 3D 지구 및 지도 렌더링 라이브러리이며, sate
 ![image](https://github.com/user-attachments/assets/9a4d72c3-ae52-4704-8fee-b70ca6d34aa7)
 
 
++**항공편 선택**
+
+1️⃣ : '일정선택' 부분에서 선택했던, 출발지, 도착지, 춥발일, 복귀일을 보여주는 영역  
+2️⃣ : 출발편 선택 부분 → 출발/도착시간, 우주비행선, 좌석등급 (ECONOMY, BUSINESS, FIRST) 3개중 1택  
+3️⃣ : 복귀편 선택 부분 → 출발/도착시간, 우주비해언, 좌석등급 (ECONOMY, BUSINESS, FIRST) 3개중 1택  
+4️⃣ : 왕복일 경우 출발편, 복귀편 좌석을 선택을 하면 [좌석선택] 버튼 활성화  
+
 ![image](https://github.com/user-attachments/assets/54fd0ac1-ddc7-47c7-9a78-0f64a472a613)
+
++ **출발편 선택**  
+출발편 좌석을 선택하는 페이지 입니다.  
+1️⃣ : 내가 선택한 좌석 등급이 ECONOMY이면, BUSINESS, FIRST 좌석은 선택이 불가능하고, ECONOMY 좌석만 선택이 가능합니다.
+ECONOMY의 경우 예약 된 좌석은 좌석 선택이 안된고 '하늘색'좌석으로, 선택 가능한 좌석은 '검은색'좌석으로 그리고 선택한 좌석은 '보라색'으로 표현  
+2️⃣ : 2번 영역에는 출발지, 도착지, 출발/도착(날짜, 시간), 인원수, 선택한 좌석의 번호랑 등급을 보여주는 영역
+
+![image](https://github.com/user-attachments/assets/ddcd5c51-c2fc-49ce-8867-0730723a55b3)
+
++ **복귀편 선택**<br>
+복귀편(왕복) 좌석을 선택하는 페이지 입니다.<br> 
+1️⃣ : 내가 선택한 좌석 등급이 BUSINESS이면, ECONOMY, FIRST 좌석은 선택이 불가능하고, BUSINESS 좌석만 선택이 가능합니다.<br>
+2️⃣ : 2번 영역에는 출발지, 도착지, 출발/도착(날짜, 시간), 인원수, 선택한 좌석의 번호랑 등급을 보여주는 영역<br>
+
+![image](https://github.com/user-attachments/assets/9cff7b15-fbe4-42f1-9281-8a6499d2804d)
+
++ **예약 확인**<br>
+내가 선택한 출발지, 도착지, 출발날짜, 도착날짜, 좌석등 내가 입력한 정보들을 보여주는 '예약확인'페이지 입니다.<br>
+1️⃣ : 내가 선택한 출발편/복귀편, 그리고 '총 인원수'와 '총 가격'에 대한 정보를 보여주는 영역
+![image](https://github.com/user-attachments/assets/aa9022d8-fd99-40d6-ae47-02898a4a490d)
+
+1️⃣ : '우주여행 약관동의'영역이며, 해당하는 조항들을 다 열어서 동의한다는 [체크박스]를 체크해야지만, "위 약관에 모두 동의합니다."라는 체크박스에 체크가 됨<br>
+![image](https://github.com/user-attachments/assets/283b392c-1c15-4910-ba24-90cb1ad5ed8b)
+
+1️⃣ : '전자서명'을 해야지만 [예약확정] 버튼이 활성화 되고, [지우기] 버튼을 통해서 전자서명을 다시 할 수 있음.<br>
+예약확정이 되면, "예약이 확정되었습니다.", "예약이 확정되었습니다! 즐거운 우주 여행 되세요 🚀" 라는 알림을 보냄
+![image](https://github.com/user-attachments/assets/ca2774c6-f7b5-4635-ac38-d7d2ba25f34d)
+
++ **결제하기**<br>
+결제하기는 두가지의 방식으로 구현(STRIPE 결제, TOSS 결제)<bR>
+
+## [STRIPE 결제]
+1️⃣ : STRIPE 결제 부분이며, 현재는 테스트 버전이므로 테스트가능한 '카드번호'를 입력
+![image](https://github.com/user-attachments/assets/f3db283f-0b60-4176-badf-24f5af9a5739)
+
+1️⃣ : 결제가 성공하면 보여지는 페이지, '주문번호'는 항상 랜덤으로 발행이되며, '결제금액','상품명','구매자명'을 보여줌
+![image](https://github.com/user-attachments/assets/dc2ce649-14d2-4af3-a9ca-fd61e718f586)
+
+## [TOSS 결제]
+TOSS에서 테스트 가능한 결제 API를 사용함<br>
+[다양한 결제방법] 버튼을 클릭한 후, '토스페이' 클릭, 개인정보 동의 체크박스 체크 후, [다음]버튼을 누르면 QR코드 발급<br>
+QR코드를 이용해서 가상 결제 진행함<br>
+![toss-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/3978c37c-6700-499a-b8d7-dcbf6f2f0385)
+
+결제가 완료되었으면, 결제 완료 페이지로 넘어가며 해당하는 '주문번호','결제금액','상품명','구매자명'을 보여줌.
+![image](https://github.com/user-attachments/assets/4f6457bd-e81e-47ec-a432-e72fa354c620)
+
 
 
 
@@ -225,7 +279,7 @@ CesiumJS는 고성능 3D 지구 및 지도 렌더링 라이브러리이며, sate
 ![스크린샷 2025-06-21 010315](https://github.com/user-attachments/assets/9bd880ce-45ea-42be-804f-6df13be1c5a5)
 
 + 파일 업로드(미리보기, 사진 누르면 크게 보기 가능)
-  
+
 ![스크린샷 2025-06-21 013650](https://github.com/user-attachments/assets/6325f444-0054-47b6-98f7-8a05fe446e50)
 
 ![스크린샷 2025-06-21 013723](https://github.com/user-attachments/assets/1c02ae82-03eb-4f87-baf0-a606d92cb0e9)
