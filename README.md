@@ -202,7 +202,14 @@ CesiumJS는 고성능 3D 지구 및 지도 렌더링 라이브러리이며, sate
 + 우주 일정 선택
 : 편도, 왕복, 출발지, 도착지, 출발일, 탑승인원(최대3인 제한) 선택, 왕복을 클릭하면 복귀일을 고를수 있는 칸이 생성된다.
 
-![image](https://github.com/user-attachments/assets/7412f3ee-b321-4307-bed8-d7c852f2c2d3)
+![image](https://github.com/user-attachments/assets/05851266-4d2c-4740-aefc-441d3902a421)
+
+
++ '일정 선택 완료' 버튼을 누르면 내가 선택한 정보들을 알림을 통해서 알 수 있습니다.
+![image](https://github.com/user-attachments/assets/9a4d72c3-ae52-4704-8fee-b70ca6d34aa7)
+
+
+![image](https://github.com/user-attachments/assets/54fd0ac1-ddc7-47c7-9a78-0f64a472a613)
 
 
 
