@@ -1,4 +1,4 @@
-![gibs](https://github.com/user-attachments/assets/60c45757-3577-4869-bacb-67b85b3ce16c)![스크린샷 2025-06-11 212356](https://github.com/user-attachments/assets/04a6c310-ec3f-4f35-bfc7-05bcf2e0a14c)
+![스크린샷 2025-06-11 212356](https://github.com/user-attachments/assets/04a6c310-ec3f-4f35-bfc7-05bcf2e0a14c)
 
 # 🚀 우주 여행
 KG아이티뱅크에서 주관한 프로젝트로, Spring Boot 3.4.5를 사용하여 개발한 우주 여행 웹사이트입니다.
